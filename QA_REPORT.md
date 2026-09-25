@@ -17,4 +17,10 @@
 
 Every mathematical check passed.
 
-This report covers the calculation engine and deterministic scenario data. Browser-based visual and interaction checks are recorded separately after application QA.
+## Browser interaction and visual QA
+
+- **Status:** PASS in Microsoft Edge 153.0.4234.48, opening the local file directly.
+- **Interactions:** all eight navigation buttons; all eight presets; Gross Profit Cost Shock; editable quantity; Reset; Analyst Mode; Ctrl+Right; Interpretation scenarios A, B, and D; stakeholder wording response.
+- **Responsive:** sampled at 1440px desktop, 1024px tablet, and 390px mobile. No horizontal overflow on checked stages.
+- **Runtime:** zero external requests, console errors, or uncaught exceptions. No missing runtime assets.
+- **Screenshots:** [Orientation](qa/screenshots/desktop-stage-0.png), [Revenue: 3 factors](qa/screenshots/desktop-stage-2.png), [Gross Profit: full bridge](qa/screenshots/desktop-stage-6.png), [Interpretation Lab](qa/screenshots/desktop-stage-7.png), [mobile Revenue](qa/screenshots/mobile-stage-2.png).

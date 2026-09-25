@@ -24,9 +24,10 @@ Run the mathematical verification from this directory:
 
 ```powershell
 node qa/run-qa.mjs
+node qa/run-browser-qa.mjs
 ```
 
-The command checks deterministic presets, eight reconciliation identities, edge cases, an independent direct-total path, and seeded randomized scenarios, then updates `QA_REPORT.md`.
+The first command checks deterministic presets, eight reconciliation identities, edge cases, an independent direct-total path, and seeded randomized scenarios. The second opens the app directly in Microsoft Edge, tests the interactions and responsive layouts, captures representative screenshots, and adds its results to `QA_REPORT.md`.
 
 ## Publish updates
 
