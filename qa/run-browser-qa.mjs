@@ -8,9 +8,10 @@ import { setTimeout as delay } from 'node:timers/promises';
 const project = path.resolve(import.meta.dirname, '..');
 const screenshotDir = path.join(project, 'qa', 'screenshots');
 const browser = process.env.PVM_BROWSER_BIN || 'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe';
+const appBaseUrl = process.env.PVM_APP_URL || pathToFileURL(path.join(project, 'index.html')).href;
+const appOrigin = new URL(appBaseUrl).origin;
 const debugPort = Number(process.env.PVM_DEBUG_PORT || 9223);
 const browserProfile = path.join(project, 'qa', '.edge-profile');
-const entryUrl = `${pathToFileURL(path.join(project, 'index.html')).href}?stage=0`;
 await mkdir(screenshotDir, { recursive: true });
 
 const child = spawn(browser, [
@@ -25,6 +26,8 @@ class CDP {
   pending = new Map();
   errors = [];
   externalRequests = [];
+  documentResponses = [];
+  httpErrors = [];
   socket;
 
   async connect(url) {
@@ -54,7 +57,12 @@ class CDP {
         this.errors.push(message.params.entry.text);
       } else if (message.method === 'Network.requestWillBeSent') {
         const url = message.params.request.url;
-        if (!/^(file:|data:|blob:|devtools:)/i.test(url)) this.externalRequests.push(url);
+        if (!/^(file:|data:|blob:|devtools:)/i.test(url) && new URL(url).origin !== appOrigin) this.externalRequests.push(url);
+      } else if (message.method === 'Network.responseReceived' && message.params.type === 'Document') {
+        this.documentResponses.push({ url: message.params.response.url, status: message.params.response.status });
+      }
+      if (message.method === 'Network.responseReceived' && message.params.response.status >= 400) {
+        this.httpErrors.push({ url: message.params.response.url, status: message.params.response.status });
       }
     });
   }
@@ -102,8 +110,14 @@ async function setViewport(cdp, width, height, mobile = false) {
   });
 }
 
-async function openLocalApp(cdp, stage = 0) {
-  await cdp.send('Page.navigate', { url: `${pathToFileURL(path.join(project, 'index.html')).href}?stage=${stage}` });
+function stageUrl(stage) {
+  const url = new URL(appBaseUrl);
+  url.searchParams.set('stage', String(stage));
+  return url.href;
+}
+
+async function openApp(cdp, stage = 0) {
+  await cdp.send('Page.navigate', { url: stageUrl(stage) });
   for (let i = 0; i < 100; i++) {
     try {
       if (await cdp.evaluate("document.readyState === 'complete' && !!window.PVM_LAB_UI")) return;
@@ -135,7 +149,7 @@ try {
   await cdp.send('Network.enable');
   await cdp.send('Log.enable');
   await setViewport(cdp, 1440, 1100);
-  await openLocalApp(cdp, 0);
+  await openApp(cdp, 0);
 
   const navResults = await cdp.evaluate(`(() => {
     const results=[];
@@ -201,7 +215,7 @@ try {
 
   await setViewport(cdp, 1440, 1100);
   for (const [stage, name] of [[0,'desktop-stage-0.png'],[2,'desktop-stage-2.png'],[6,'desktop-stage-6.png'],[7,'desktop-stage-7.png']]) {
-    await openLocalApp(cdp, stage);
+    await openApp(cdp, stage);
     const check = await cdp.evaluate(`({stage:window.PVM_LAB_UI.getStage(),width:document.documentElement.scrollWidth,viewport:window.innerWidth,hasChart:${stage===0||stage===7?'false':'!!document.querySelector("#chartWrap svg")'},text:document.body.innerText})`);
     assert.equal(check.stage, stage);
     assert.ok(check.width <= check.viewport, `Desktop horizontal overflow at stage ${stage}: ${check.width}/${check.viewport}`);
@@ -217,7 +231,7 @@ try {
     [390,844,7,'mobile-stage-7.png',true]
   ]) {
     await setViewport(cdp, width, height, mobile);
-    await openLocalApp(cdp, stage);
+    await openApp(cdp, stage);
     const check = await cdp.evaluate(`({stage:window.PVM_LAB_UI.getStage(),width:document.documentElement.scrollWidth,viewport:window.innerWidth,text:document.body.innerText,chart:!!document.querySelector('#chartWrap svg')})`);
     assert.equal(check.stage, stage);
     assert.ok(check.width <= check.viewport, `Horizontal overflow at ${width}px, stage ${stage}: ${check.width}/${check.viewport}`);
@@ -228,11 +242,19 @@ try {
 
   await delay(250);
   assert.deepEqual(cdp.errors, [], `Browser console/runtime errors: ${JSON.stringify(cdp.errors)}`);
+  assert.deepEqual(cdp.httpErrors, [], `HTTP resource errors: ${JSON.stringify(cdp.httpErrors)}`);
   assert.deepEqual(cdp.externalRequests, [], `Unexpected runtime requests: ${JSON.stringify(cdp.externalRequests)}`);
+  if (appOrigin !== 'null') {
+    const pageResponse = cdp.documentResponses.find(response => new URL(response.url).origin === appOrigin);
+    assert.equal(pageResponse?.status, 200, `Public app did not return HTTP 200: ${JSON.stringify(pageResponse)}`);
+    results.push(`Live URL: ${pageResponse.status} ${pageResponse.url}`);
+  }
   results.push(`Responsive layouts: 1440px desktop, 1024px tablet, 390px mobile; no horizontal overflow on sampled stages.`);
   results.push(`Runtime dependencies: no external requests, console errors, or uncaught exceptions.`);
+  const appLocation = appOrigin === 'null' ? 'the local HTML file directly' : 'the public GitHub Pages URL';
   const browserSection = `## Browser interaction and visual QA\n\n`+
-    `- **Status:** PASS in Microsoft Edge 153.0.4234.48, opening the local file directly.\n`+
+    `- **Status:** PASS in Microsoft Edge 153.0.4234.48, opening ${appLocation}.\n`+
+    (appOrigin === 'null' ? '' : `- **Public smoke test:** HTTP 200 from ${appBaseUrl}.\n`) +
     `- **Interactions:** all eight navigation buttons; all eight presets; Gross Profit Cost Shock; editable quantity; Reset; Analyst Mode; Ctrl+Right; Interpretation scenarios A, B, and D; stakeholder wording response.\n`+
     `- **Responsive:** sampled at 1440px desktop, 1024px tablet, and 390px mobile. No horizontal overflow on checked stages.\n`+
     `- **Runtime:** zero external requests, console errors, or uncaught exceptions. No missing runtime assets.\n`+

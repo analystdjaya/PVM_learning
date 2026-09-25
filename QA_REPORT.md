@@ -19,7 +19,7 @@ Every mathematical check passed.
 
 ## Browser interaction and visual QA
 
-- **Status:** PASS in Microsoft Edge 153.0.4234.48, opening the local file directly.
+- **Status:** PASS in Microsoft Edge 153.0.4234.48, opening the local HTML file directly.
 - **Interactions:** all eight navigation buttons; all eight presets; Gross Profit Cost Shock; editable quantity; Reset; Analyst Mode; Ctrl+Right; Interpretation scenarios A, B, and D; stakeholder wording response.
 - **Responsive:** sampled at 1440px desktop, 1024px tablet, and 390px mobile. No horizontal overflow on checked stages.
 - **Runtime:** zero external requests, console errors, or uncaught exceptions. No missing runtime assets.
