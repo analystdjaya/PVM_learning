@@ -1,0 +1,33 @@
+# PVM Learning Lab
+
+An interactive, illustrative learning lab for Revenue and Gross Profit Price-Volume-Mix analysis. It takes analysts from a combined Volume + Mix bridge through pure Quantity, Total Mix, Channel Mix, Product Mix, and Cost, then practices responsible interpretation.
+
+## What it includes
+
+- Eight learning stages with one shared 3-channel × 4-product dataset.
+- Custom SVG impact waterfalls, live simulation presets, and an editable Product × Channel table.
+- Analyst Mode with formulas, reconciliation, the Channel-first attribution rule, and data caveats.
+- A stakeholder interpretation lab with All-SKU and Focus-SKU comparison.
+- No external runtime libraries, fonts, APIs, or network requests.
+
+The visual foundation and the free-plan Figma review are documented in [FIGMA_REVIEW.md](FIGMA_REVIEW.md) and the [Figma file](https://www.figma.com/design/1NY05JxCMhSvaeRCOwb2kL).
+
+Revenue mix uses Period 1 selling price. Gross Profit mix uses Period 1 unit gross margin. The detailed split applies Channel Mix first, followed by Product Mix within Channel; that order determines the individual mix attribution.
+
+All data are fictional and for training only; they do not represent any company or commercial result.
+
+## Open and verify
+
+Open `index.html` directly in a browser, or use the live [GitHub Pages learning lab](https://analystdjaya.github.io/PVM_learning/).
+
+Run the mathematical verification from this directory:
+
+```powershell
+node qa/run-qa.mjs
+```
+
+The command checks deterministic presets, eight reconciliation identities, edge cases, an independent direct-total path, and seeded randomized scenarios, then updates `QA_REPORT.md`.
+
+## Publish updates
+
+Edit the project, run the QA command, then commit and push to `main`. GitHub Pages deploys the repository root automatically through the workflow in `.github/workflows/pages.yml`.
