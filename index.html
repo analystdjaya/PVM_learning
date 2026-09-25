@@ -123,12 +123,15 @@
     .chart-title { margin: 0; font-size: 14px; font-weight: 750; letter-spacing: -.01em; }
     .chart-subtitle { margin: 4px 0 0; color: var(--muted); font-size: 10px; }
     .chart-scale { flex: none; padding: 5px 8px; border-radius: 6px; background: #f2f3ef; color: #68756e; font-size: 9px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
-    .bridge-equation { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 13px 20px 12px; border-top: 1px solid #eef0eb; }
-    .bridge-endpoint { min-width: 105px; padding: 7px 9px; border: 1px solid #dce3dc; border-radius: 8px; background: #f5f6f2; }
+    .bridge-equation { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; padding: 13px 14px 12px; border-top: 1px solid #eef0eb; }
+    .bridge-endpoint { position: relative; min-width: 105px; padding: 7px 9px; border: 1px solid #dce3dc; border-radius: 8px; background: #f5f6f2; }
+    .bridge-endpoint.bridge-period { min-width: 90px; }
+    .bridge-endpoint.bridge-impact { min-width: 76px; }
+    .bridge-endpoint.with-op { margin-left: 10px; }
+    .equation-op { position: absolute; top: 50%; left: -13px; width: 10px; transform: translateY(-50%); color: #829087; font-size: 15px; text-align: center; }
     .bridge-endpoint:last-child { background: #eef4ef; border-color: #d5e4d8; }
     .bridge-endpoint small { display: block; color: var(--muted); font-size: 9px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
     .bridge-endpoint strong { display: block; margin-top: 2px; font-size: 15px; font-variant-numeric: tabular-nums; letter-spacing: -.025em; }
-    .equation-arrow { color: #829087; font-size: 15px; }
     .delta-chip { margin-left: auto; padding: 6px 9px; border-radius: 7px; background: var(--navy-wash); color: var(--navy); font-size: 10px; font-weight: 750; font-variant-numeric: tabular-nums; }
     .positive { color: var(--green-deep); }
     .negative { color: var(--red); }
@@ -323,7 +326,7 @@
       .bridge-equation { gap: 5px; padding: 10px 12px; }
       .bridge-endpoint { min-width: 0; flex: 1 1 90px; padding: 6px 7px; }
       .bridge-endpoint strong { font-size: 13px; }
-      .equation-arrow { font-size: 12px; }
+      .equation-op { font-size: 12px; }
       .delta-chip { flex: 1 0 100%; margin: 1px 0 0; text-align: center; }
       .chart-wrap { min-height: 220px; padding-right: 0; }
       .waterfall { min-height: 220px; }
@@ -785,7 +788,7 @@
       const controls=PRESETS.map(name=>`<button class="preset" type="button" data-preset="${esc(name)}" aria-pressed="${scenario===name}">${esc(name)}</button>`).join("");
       const math=analystPanel(stage,calc);
       const metrics=stage.components.map(([key,label])=>`<span class="fact-pill ${valueClass(impactSet[key])}">${esc(label)} ${esc(signed(impactSet[key]))}</span>`).join("");
-      const bridge=stage.components.map(([key,label])=>`<span class="bridge-endpoint" style="min-width:92px"><small>${esc(label)}</small><strong class="${valueClass(impactSet[key])}">${esc(signed(impactSet[key]))}</strong></span>`).join(`<span class="equation-arrow" aria-hidden="true">+</span>`);
+      const bridge=stage.components.map(([key,label],index)=>`<span class="bridge-endpoint bridge-impact with-op"><span class="equation-op" aria-hidden="true">${index===0?"→":"+"}</span><small>${esc(label)}</small><strong class="${valueClass(impactSet[key])}">${esc(signed(impactSet[key]))}</strong></span>`).join("");
       const vals={delta:endpointValue.delta,price:impactSet.price,mix:impactSet.volumeMix,quantity:impactSet.quantity,channel:impactSet.channelMix,product:impactSet.productMix,cost:impactSet.cost};
       const answer=replaceTemplate(stage.stakeholder,vals);
       const caution=calc.flags.reason?`<p class="caveat" role="note"><strong>Data flag:</strong> ${esc(calc.flags.reason)}</p>`:calc.flags.discontinued.length?`<p class="caveat" role="note"><strong>Data flag:</strong> Discontinued items are present: ${esc(calc.flags.discontinued.join(", "))}. Their current-period share is zero; interpret Product Mix with care.</p>`:"";
@@ -795,9 +798,9 @@
             <section class="chart-panel panel" aria-label="${esc(endpoint(stage))} impact waterfall">
               <div class="chart-head"><div><h2 class="chart-title">${esc(endpoint(stage))} · impact waterfall</h2><p class="chart-subtitle">Cumulative component contribution, with exact period totals above</p></div><span class="chart-scale">Impact scale · zero starts here</span></div>
               <div class="bridge-equation" aria-label="Beginning value, impact components, ending value">
-                <span class="bridge-endpoint"><small>Period 1 · Beginning</small><strong>${money(endpointValue.begin)}</strong></span><span class="equation-arrow" aria-hidden="true">→</span>
+                <span class="bridge-endpoint bridge-period"><small>Period 1 · Beginning</small><strong>${money(endpointValue.begin)}</strong></span>
                 ${bridge}
-                <span class="equation-arrow" aria-hidden="true">→</span><span class="bridge-endpoint"><small>Period 2 · Ending</small><strong>${money(endpointValue.end)}</strong></span>
+                <span class="bridge-endpoint bridge-period with-op"><span class="equation-op" aria-hidden="true">→</span><small>Period 2 · Ending</small><strong>${money(endpointValue.end)}</strong></span>
                 <span class="delta-chip">Net ${endpoint(stage)} change ${signed(endpointValue.delta)}</span>
               </div>
               <div class="chart-wrap" id="chartWrap">${renderWaterfall(stage,calc)}</div>

@@ -147,6 +147,7 @@ try {
   await cdp.send('Page.enable');
   await cdp.send('Runtime.enable');
   await cdp.send('Network.enable');
+  await cdp.send('Network.setCacheDisabled', { cacheDisabled: true });
   await cdp.send('Log.enable');
   await setViewport(cdp, 1440, 1100);
   await openApp(cdp, 0);
@@ -241,8 +242,8 @@ try {
   }
 
   await delay(250);
-  assert.deepEqual(cdp.errors, [], `Browser console/runtime errors: ${JSON.stringify(cdp.errors)}`);
   assert.deepEqual(cdp.httpErrors, [], `HTTP resource errors: ${JSON.stringify(cdp.httpErrors)}`);
+  assert.deepEqual(cdp.errors, [], `Browser console/runtime errors: ${JSON.stringify(cdp.errors)}; HTTP errors=${JSON.stringify(cdp.httpErrors)}`);
   assert.deepEqual(cdp.externalRequests, [], `Unexpected runtime requests: ${JSON.stringify(cdp.externalRequests)}`);
   if (appOrigin !== 'null') {
     const pageResponse = cdp.documentResponses.find(response => new URL(response.url).origin === appOrigin);

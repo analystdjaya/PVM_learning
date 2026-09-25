@@ -52,7 +52,7 @@ Real analyses should separately review new and discontinued products, channels w
 
 The interface uses a warm paper background, dark ink, restrained positive/negative colors, Inter-first local system sans fallbacks, strong type hierarchy, persistent learning navigation, and a cumulative SVG impact waterfall. Exact period totals sit beside a zero-start impact bridge so the scale remains legible without hiding the full business values. Signs, labels, and placement carry meaning in addition to color. Motion respects `prefers-reduced-motion`; controls use native semantic buttons, details, selects, labels, and visible focus states. All CSS and JavaScript are inline in `index.html`; no web font is downloaded.
 
-The Figma foundation specimen and the visual review boundary for the free plan are recorded in [FIGMA_REVIEW.md](FIGMA_REVIEW.md).
+The Figma foundation specimen and the visual review boundary for the free plan are recorded in [FIGMA_REVIEW.md](FIGMA_REVIEW.md). Browser and Canva review findings are in [CANVA_REVIEW.md](CANVA_REVIEW.md).
 
 ## Updating the illustrative dataset
 

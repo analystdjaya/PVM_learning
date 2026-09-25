@@ -10,7 +10,7 @@ An interactive, illustrative learning lab for Revenue and Gross Profit Price-Vol
 - A stakeholder interpretation lab with All-SKU and Focus-SKU comparison.
 - No external runtime libraries, fonts, APIs, or network requests.
 
-The visual foundation and the free-plan Figma review are documented in [FIGMA_REVIEW.md](FIGMA_REVIEW.md) and the [Figma file](https://www.figma.com/design/1NY05JxCMhSvaeRCOwb2kL).
+The visual foundation and review findings are documented in [FIGMA_REVIEW.md](FIGMA_REVIEW.md), [CANVA_REVIEW.md](CANVA_REVIEW.md), the [Figma file](https://www.figma.com/design/1NY05JxCMhSvaeRCOwb2kL), and the [Canva review copy](https://www.canva.com/d/6IPkLU4fYNawy32).
 
 Revenue mix uses Period 1 selling price. Gross Profit mix uses Period 1 unit gross margin. The detailed split applies Channel Mix first, followed by Product Mix within Channel; that order determines the individual mix attribution.
 
