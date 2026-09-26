@@ -1,962 +1,136 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="color-scheme" content="light">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' data:; style-src 'unsafe-inline'; script-src 'unsafe-inline'; connect-src 'none'; font-src 'self'; media-src 'none'; object-src 'none'; base-uri 'none'">
-  <meta name="description" content="An interactive, illustrative learning lab for Revenue and Gross Profit Price-Volume-Mix analysis.">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23124f43'/%3E%3Cpath d='M5 22h5v-8h5v4h5v-9h7' fill='none' stroke='white' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
-  <title>PVM Learning Lab - Price, Volume &amp; Mix</title>
-  <style>
-    :root {
-      --pvm-paper: #f4f3ef;
-      --pvm-white: #fffefa;
-      --pvm-neutral-100: #eeede7;
-      --pvm-neutral-200: #d9ddd5;
-      --pvm-neutral-300: #bbc6bd;
-      --pvm-neutral-500: #727d77;
-      --pvm-neutral-700: #52635d;
-      --pvm-ink: #20322e;
-      --pvm-green-100: #e4efe8;
-      --pvm-green-700: #246b56;
-      --pvm-green-900: #174a3b;
-      --pvm-red-100: #f5e9e5;
-      --pvm-red-700: #a84f45;
-      --pvm-amber-100: #f4eedf;
-      --pvm-amber-700: #a87520;
-      --pvm-navy-100: #e8eff2;
-      --pvm-navy-700: #36566b;
-      --pvm-focus: #176c98;
-      --paper: var(--pvm-paper);
-      --surface: var(--pvm-white);
-      --surface-muted: var(--pvm-neutral-100);
-      --ink: var(--pvm-ink);
-      --ink-soft: var(--pvm-neutral-700);
-      --muted: var(--pvm-neutral-500);
-      --line: var(--pvm-neutral-200);
-      --line-strong: var(--pvm-neutral-300);
-      --green: var(--pvm-green-700);
-      --green-deep: var(--pvm-green-900);
-      --green-wash: var(--pvm-green-100);
-      --red: var(--pvm-red-700);
-      --red-wash: var(--pvm-red-100);
-      --amber: var(--pvm-amber-700);
-      --amber-wash: var(--pvm-amber-100);
-      --navy: var(--pvm-navy-700);
-      --navy-wash: var(--pvm-navy-100);
-      --shadow: 0 10px 28px rgba(31, 47, 42, .055);
-      --space-1: 4px;
-      --space-2: 8px;
-      --space-3: 12px;
-      --space-4: 16px;
-      --space-6: 24px;
-      --space-8: 32px;
-      --radius-sm: 8px;
-      --radius-md: 14px;
-      --radius-lg: 20px;
-      --font-size-body: 15px;
-      --font-size-title: 42px;
-      --font-size-label: 10px;
-      --font: Inter;
-      --focus: var(--pvm-focus);
-      --font: Arial, Helvetica, sans-serif;
-    }
-    * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-    body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--font), system-ui, "Segoe UI", Arial, sans-serif; font-size: var(--font-size-body); line-height: 1.5; }
-    button, input, select { font: inherit; }
-    button { color: inherit; }
-    button:focus-visible, input:focus-visible, summary:focus-visible, a:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
-    a { color: inherit; }
-    .app-shell { min-height: 100vh; }
-    .sidebar { position: fixed; inset: 0 auto 0 0; z-index: 20; width: 252px; display: flex; flex-direction: column; padding: 27px 16px 18px; background: var(--surface-muted); border-right: 1px solid var(--line); }
-    .brand { display: flex; align-items: center; gap: 12px; padding: 0 9px 29px; text-decoration: none; }
-    .brand-mark { width: 35px; height: 35px; display: grid; place-items: center; background: var(--green-deep); border-radius: 11px; color: white; }
-    .brand-mark svg { width: 22px; height: 22px; }
-    .brand-name { font-size: 14px; font-weight: 750; letter-spacing: -.025em; }
-    .brand-tag { color: var(--muted); font-size: 10px; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; }
-    .nav-head { display: flex; justify-content: space-between; align-items: center; padding: 0 9px 9px; color: #67746d; font-size: 10px; font-weight: 750; letter-spacing: .11em; text-transform: uppercase; }
-    .nav-head span:last-child { font-variant-numeric: tabular-nums; }
-    .stage-nav { display: grid; gap: var(--space-1); }
-    .stage-link { width: 100%; display: grid; grid-template-columns: 29px minmax(0, 1fr) 16px; align-items: center; gap: 9px; min-height: 48px; padding: 6px 9px; border: 1px solid transparent; border-radius: 11px; background: transparent; text-align: left; cursor: pointer; transition: background .18s ease, border-color .18s ease, transform .18s ease; }
-    .stage-link:hover { background: rgba(255,255,255,.57); }
-    .stage-link:active { transform: translateY(1px); }
-    .stage-link[aria-current="step"] { background: var(--surface); border-color: #d6ddd5; box-shadow: 0 2px 7px rgba(20,40,32,.045); }
-    .stage-number { width: 27px; height: 27px; display: grid; place-items: center; border: 1px solid #cbd2c9; border-radius: 50%; color: #59665f; background: rgba(255,255,255,.45); font-size: 11px; font-weight: 700; font-variant-numeric: tabular-nums; }
-    [aria-current="step"] .stage-number { border-color: var(--green-deep); background: var(--green-deep); color: white; }
-    .stage-label { font-size: 12px; font-weight: 650; line-height: 1.3; }
-    .stage-kind { display: block; padding-top: 3px; color: var(--muted); font-size: 10px; font-weight: 500; }
-    .stage-check { color: var(--green); font-size: 13px; }
-    .sidebar-note { margin-top: auto; padding: 15px 12px 12px; border-top: 1px solid #d4d8d0; color: #626f68; font-size: 11px; }
-    .sidebar-note strong { display: block; margin-bottom: 3px; color: var(--ink); font-size: 11px; }
-    .workspace { min-height: 100vh; margin-left: 252px; }
-    .topbar { position: sticky; top: 0; z-index: 10; height: 66px; display: flex; align-items: center; justify-content: space-between; padding: 0 clamp(22px, 4.2vw, 62px); background: rgba(244,243,239,.94); border-bottom: 1px solid rgba(217,221,213,.78); backdrop-filter: blur(12px); }
-    .top-context { display: flex; align-items: center; gap: 9px; color: var(--ink-soft); font-size: 11px; font-weight: 650; letter-spacing: .015em; }
-    .live-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 3px var(--green-wash); }
-    .top-actions { display: flex; align-items: center; gap: var(--space-2); }
-    .button { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 36px; padding: 0 12px; border: 1px solid var(--line-strong); border-radius: 9px; background: var(--surface); color: var(--ink); font-size: 11px; font-weight: 700; cursor: pointer; transition: background .16s ease, border-color .16s ease, transform .16s ease; }
-    .button:hover { border-color: #85988d; background: #f8faf6; }
-    .button:active { transform: translateY(1px); }
-    .button-primary { color: white; border-color: var(--green-deep); background: var(--green-deep); }
-    .button-primary:hover { background: #205c49; border-color: #205c49; }
-    .button-quiet { border-color: transparent; background: transparent; }
-    .button-quiet:hover { background: rgba(255,255,255,.75); border-color: var(--line); }
-    .button svg { width: 14px; height: 14px; }
-    .main-wrap { width: min(1440px, 100%); margin: 0 auto; padding: 33px clamp(22px, 4.2vw, 62px) 52px; }
-    .page-enter { animation: enter .3s ease both; }
-    @keyframes enter { from { opacity: .45; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-    .page-heading { margin-bottom: var(--space-6); }
-    .eyebrow { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 10px; color: var(--green); font-size: 10px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
-    .eyebrow .sep { width: 3px; height: 3px; border-radius: 50%; background: #9aa89e; }
-    h1 { max-width: 820px; margin: 0; font-size: clamp(28px, 3.1vw, var(--font-size-title)); line-height: 1.1; letter-spacing: -.045em; font-weight: 730; }
-    .page-intro { max-width: 750px; margin: 10px 0 0; color: var(--ink-soft); font-size: 14px; line-height: 1.6; }
-    .heading-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 15px; }
-    .data-tag, .lens-tag, .step-tag { display: inline-flex; align-items: center; gap: 6px; min-height: 25px; padding: 0 9px; border: 1px solid #d8ddd6; border-radius: 20px; background: rgba(255,255,255,.55); color: #56665e; font-size: 10px; font-weight: 650; }
-    .lens-tag { border-color: #d9e5de; background: var(--green-wash); color: var(--green-deep); }
-    .step-tag { color: #676e68; }
-    .lesson-layout { display: grid; grid-template-columns: minmax(0, 1.75fr) minmax(250px, .83fr); align-items: start; gap: 18px; }
-    .visual-column, .teaching-column { min-width: 0; display: grid; gap: 15px; }
-    .panel { border: 1px solid var(--line); border-radius: var(--radius-md); background: var(--surface); box-shadow: var(--shadow); }
-    .chart-panel { overflow: hidden; }
-    .chart-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; padding: 18px 20px 8px; }
-    .chart-title { margin: 0; font-size: 14px; font-weight: 750; letter-spacing: -.01em; }
-    .chart-subtitle { margin: 4px 0 0; color: var(--muted); font-size: 10px; }
-    .chart-scale { flex: none; padding: 5px 8px; border-radius: 6px; background: #f2f3ef; color: #68756e; font-size: 9px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
-    .bridge-equation { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; padding: 13px 14px 12px; border-top: 1px solid #eef0eb; }
-    .bridge-endpoint { position: relative; min-width: 105px; padding: 7px 9px; border: 1px solid #dce3dc; border-radius: 8px; background: #f5f6f2; }
-    .bridge-endpoint.bridge-period { min-width: 90px; }
-    .bridge-endpoint.bridge-impact { min-width: 76px; }
-    .bridge-endpoint.with-op { margin-left: 10px; }
-    .equation-op { position: absolute; top: 50%; left: -13px; width: 10px; transform: translateY(-50%); color: #829087; font-size: 15px; text-align: center; }
-    .bridge-endpoint:last-child { background: #eef4ef; border-color: #d5e4d8; }
-    .bridge-endpoint small { display: block; color: var(--muted); font-size: 9px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
-    .bridge-endpoint strong { display: block; margin-top: 2px; font-size: 15px; font-variant-numeric: tabular-nums; letter-spacing: -.025em; }
-    .delta-chip { margin-left: auto; padding: 6px 9px; border-radius: 7px; background: var(--navy-wash); color: var(--navy); font-size: 10px; font-weight: 750; font-variant-numeric: tabular-nums; }
-    .positive { color: var(--green-deep); }
-    .negative { color: var(--red); }
-    .neutral { color: #65746b; }
-    .chart-wrap { position: relative; min-height: 260px; padding: 0 8px 0 0; }
-    .waterfall { display: block; width: 100%; height: auto; min-height: 250px; overflow: visible; }
-    .waterfall text { font-family: var(--font), system-ui, "Segoe UI", Arial, sans-serif; }
-    .wf-grid { stroke: #e9ece6; stroke-width: 1; }
-    .wf-zero { stroke: #8a9990; stroke-width: 1.2; stroke-dasharray: 4 4; }
-    .wf-connector { stroke: #aeb9b1; stroke-width: 1; stroke-dasharray: 3 3; }
-    .wf-axis-label { fill: #849087; font-size: 9px; }
-    .wf-x-label { fill: #596860; font-size: 9px; font-weight: 650; }
-    .wf-value { fill: #31413a; font-size: 10px; font-weight: 750; font-variant-numeric: tabular-nums; }
-    .wf-bar { transition: y .25s ease, height .25s ease, fill .16s ease; }
-    .wf-positive { fill: var(--green); }
-    .wf-negative { fill: var(--red); }
-    .wf-neutral { fill: #73847a; }
-    .wf-zero-mark { stroke: var(--navy); stroke-width: 2; }
-    .chart-legend { display: flex; flex-wrap: wrap; align-items: center; gap: 13px; padding: 0 20px 15px; color: #66736b; font-size: 9px; }
-    .legend-item { display: inline-flex; align-items: center; gap: 5px; }
-    .legend-swatch { width: 9px; height: 9px; border-radius: 2px; }
-    .chart-footnote { margin-left: auto; color: #7b857f; }
-    .preset-panel { padding: 15px 17px 16px; }
-    .section-line { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
-    .section-line h2, .section-line h3 { margin: 0; font-size: 12px; font-weight: 750; }
-    .section-line small { color: var(--muted); font-size: 10px; }
-    .preset-list { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 12px; }
-    .preset { min-height: 31px; padding: 0 10px; border: 1px solid #d8ded8; border-radius: 7px; background: #fff; color: #4f6057; font-size: 10px; font-weight: 650; cursor: pointer; transition: all .15s ease; }
-    .preset:hover { border-color: #90a99a; background: #f6f9f5; }
-    .preset[aria-pressed="true"] { border-color: #739783; background: #eaf2eb; color: var(--green-deep); }
-    .teaching-card { padding: 16px 17px; }
-    .teaching-card h2, .teaching-card h3 { margin: 0 0 8px; font-size: 12px; font-weight: 750; }
-    .teaching-card p { margin: 0; color: var(--ink-soft); font-size: 11px; line-height: 1.62; }
-    .teaching-card p + p { margin-top: 8px; }
-    .teaching-card + .teaching-card { margin-top: 1px; }
-    .tagline { display: flex; align-items: flex-start; gap: 9px; }
-    .tagline-mark { flex: none; width: 22px; height: 22px; display: grid; place-items: center; border-radius: 7px; background: var(--green-wash); color: var(--green); font-size: 11px; font-weight: 800; }
-    .tagline-content { min-width: 0; }
-    .callout { padding: 13px 14px; border: 1px solid #d9e4dc; border-left: 3px solid var(--green); border-radius: 9px; background: #f4f8f3; }
-    .callout .callout-label { margin-bottom: 6px; color: var(--green-deep); font-size: 9px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
-    .callout p { margin: 0; color: #3f544a; font-size: 11px; line-height: 1.6; }
-    .recon { display: grid; grid-template-columns: 1fr; gap: 8px; padding: 14px 15px; }
-    .recon-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
-    .recon-title { font-size: 11px; font-weight: 750; }
-    .recon-status { display: inline-flex; align-items: center; gap: 5px; font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: .07em; }
-    .recon-status::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
-    .status-pass { color: var(--green); }
-    .status-caution { color: var(--amber); }
-    .status-unavailable { color: var(--navy); }
-    .recon-equation { display: flex; flex-wrap: wrap; gap: 6px; color: #5f6d65; font-size: 10px; font-variant-numeric: tabular-nums; }
-    .recon-equation strong { color: var(--ink); }
-    .recon-gap { color: var(--muted); font-size: 9px; }
-    .math-details { padding: 0; overflow: hidden; }
-    .math-details > summary { display: flex; justify-content: space-between; align-items: center; padding: 15px 16px; list-style: none; cursor: pointer; font-size: 11px; font-weight: 750; }
-    .math-details > summary::-webkit-details-marker { display: none; }
-    .math-details > summary::after { content: "+"; color: var(--green); font-size: 17px; font-weight: 400; }
-    .math-details[open] > summary::after { content: "−"; }
-    .math-body { padding: 0 16px 16px; border-top: 1px solid #edf0eb; }
-    .math-row { padding: 11px 0; border-bottom: 1px solid #eef0eb; }
-    .math-row:last-child { border: 0; }
-    .math-label { color: var(--muted); font-size: 9px; font-weight: 750; letter-spacing: .09em; text-transform: uppercase; }
-    .formula { display: block; margin-top: 5px; color: #32443b; font-family: "Courier New", monospace; font-size: 10px; line-height: 1.6; overflow-wrap: anywhere; }
-    .math-copy { margin: 6px 0 0; color: var(--ink-soft); font-size: 10px; line-height: 1.6; }
-    .caveat { margin-top: 10px; padding: 10px 11px; border-radius: 8px; background: var(--amber-wash); color: #68552d; font-size: 10px; line-height: 1.55; }
-    .dataset-panel { margin-top: 18px; overflow: hidden; }
-    .dataset-panel > summary { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 14px 17px; list-style: none; cursor: pointer; }
-    .dataset-panel > summary::-webkit-details-marker { display: none; }
-    .dataset-panel > summary::after { content: "Edit values  +"; color: var(--green-deep); font-size: 10px; font-weight: 750; }
-    .dataset-panel[open] > summary::after { content: "Close editor  −"; }
-    .dataset-title { font-size: 11px; font-weight: 750; }
-    .dataset-desc { display: block; margin-top: 3px; color: var(--muted); font-size: 10px; font-weight: 400; }
-    .editor-scroll { overflow: auto; border-top: 1px solid #eef0eb; }
-    .editor-table { width: 100%; min-width: 760px; border-collapse: collapse; font-size: 10px; font-variant-numeric: tabular-nums; }
-    .editor-table th { position: sticky; top: 0; padding: 9px 8px; background: #f3f4ef; color: #647269; font-size: 9px; text-align: right; white-space: nowrap; }
-    .editor-table th:first-child, .editor-table td:first-child { text-align: left; }
-    .editor-table td { padding: 5px 7px; border-top: 1px solid #eff1ec; text-align: right; }
-    .editor-table td:first-child { min-width: 150px; color: #3c4e45; font-weight: 650; }
-    .editor-table input { width: 74px; min-height: 31px; padding: 4px 6px; border: 1px solid #d7ddd6; border-radius: 6px; background: #fff; color: var(--ink); text-align: right; font-size: 10px; }
-    .editor-table input:invalid { border-color: var(--red); background: #fff8f6; }
-    .editor-note { margin: 0; padding: 10px 17px 14px; color: var(--muted); font-size: 10px; }
-    .footer-note { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; margin-top: 27px; padding-top: 13px; border-top: 1px solid #dfe2db; color: #78827b; font-size: 9px; }
-    .footer-note strong { color: #59685f; }
-    .orientation-grid { display: grid; grid-template-columns: minmax(0,1.25fr) minmax(260px,.75fr); gap: 17px; align-items: stretch; }
-    .orientation-hero { min-height: 260px; display: flex; flex-direction: column; justify-content: space-between; padding: 24px; border: 1px solid #cfdad1; border-radius: var(--radius-lg); background: #e6eee6; overflow: hidden; }
-    .orientation-hero h2 { max-width: 600px; margin: 0; font-size: clamp(24px,2.5vw,34px); line-height: 1.16; letter-spacing: -.045em; }
-    .orientation-hero p { max-width: 570px; margin: 10px 0 0; color: #52655a; font-size: 12px; line-height: 1.65; }
-    .hero-equation { display: flex; flex-wrap: wrap; align-items: center; gap: 9px; margin-top: 25px; color: #435c4d; font-size: 11px; font-weight: 750; }
-    .hero-equation span { padding: 8px 11px; border: 1px solid #cedbce; border-radius: 7px; background: rgba(255,255,255,.55); }
-    .hero-equation b { color: #789082; }
-    .vocab-panel { padding: 19px; }
-    .vocab-panel h2 { margin: 0 0 12px; font-size: 13px; }
-    .vocab-row { display: grid; grid-template-columns: 39px minmax(0,1fr); gap: 10px; padding: 10px 0; border-top: 1px solid #eef0eb; }
-    .vocab-letter { color: var(--green); font-size: 17px; font-weight: 800; line-height: 1.2; }
-    .vocab-row strong { display: block; font-size: 11px; }
-    .vocab-row span { display: block; margin-top: 2px; color: var(--muted); font-size: 10px; }
-    .concept-formulas { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 11px; margin-top: 17px; }
-    .formula-tile { padding: 16px 17px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
-    .formula-tile small { display: block; color: var(--muted); font-size: 9px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
-    .formula-tile strong { display: block; margin-top: 7px; font-size: 18px; letter-spacing: -.025em; }
-    .formula-tile p { margin: 5px 0 0; color: var(--ink-soft); font-size: 10px; }
-    .vocabulary-panel { margin-top: 17px; padding: 18px; }
-    .vocabulary-grid { display: grid; grid-template-columns: repeat(5,minmax(0,1fr)); gap: 8px; margin-top: 12px; }
-    .vocabulary-item { min-height: 111px; padding: 12px 11px; border: 1px solid #e1e4de; border-radius: 9px; background: #fbfbf7; }
-    .vocabulary-item strong { display: block; font-size: 10px; }
-    .vocabulary-item p { margin: 6px 0 0; color: var(--muted); font-size: 9px; line-height: 1.55; }
-    .roadmap-panel { margin-top: 17px; padding: 18px; }
-    .roadmap { display: grid; grid-template-columns: repeat(7,minmax(95px,1fr)); gap: 0; margin-top: 16px; overflow-x: auto; padding: 0 0 3px; }
-    .roadmap-step { position: relative; min-width: 95px; padding: 0 7px 0 0; }
-    .roadmap-step:not(:last-child)::after { content: ""; position: absolute; top: 13px; left: 29px; right: 5px; border-top: 1px solid #c6d0c7; }
-    .roadmap-dot { position: relative; z-index: 1; width: 27px; height: 27px; display: grid; place-items: center; border: 1px solid #b9c9be; border-radius: 50%; background: #f7faf6; color: var(--green-deep); font-size: 10px; font-weight: 750; }
-    .roadmap-step strong { display: block; margin-top: 9px; font-size: 9px; line-height: 1.3; }
-    .roadmap-step span { display: block; margin-top: 3px; color: var(--muted); font-size: 8px; }
-    .orientation-bottom { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 16px; }
-    .note-panel { padding: 15px 17px; border-radius: 11px; background: var(--surface-muted); color: #526057; font-size: 10px; line-height: 1.6; }
-    .note-panel strong { color: var(--ink); }
-    .lab-intro { max-width: 860px; margin: -8px 0 20px; padding: 12px 14px; border-left: 3px solid var(--navy); border-radius: 7px; background: var(--navy-wash); color: #405866; font-size: 11px; line-height: 1.6; }
-    .scenario-lab { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 13px; }
-    .scenario-card { min-width: 0; padding: 17px; }
-    .scenario-card.wide { grid-column: 1/-1; }
-    .scenario-index { color: var(--green); font-size: 9px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
-    .scenario-card h2 { margin: 5px 0 7px; font-size: 15px; letter-spacing: -.02em; }
-    .scenario-card > p { margin: 0; color: var(--ink-soft); font-size: 10px; line-height: 1.6; }
-    .scenario-fact { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 11px; }
-    .fact-pill { padding: 5px 8px; border: 1px solid #e0e4de; border-radius: 6px; background: #fafbf8; color: #53635a; font-size: 9px; font-weight: 650; }
-    .answer-options { display: grid; gap: 7px; margin: 13px 0 10px; }
-    .answer-option { display: flex; align-items: flex-start; gap: 8px; padding: 9px 10px; border: 1px solid #e1e4de; border-radius: 8px; background: #fff; color: #4c5d54; text-align: left; font-size: 10px; line-height: 1.5; cursor: pointer; }
-    .answer-option:hover { border-color: #9cb3a3; background: #f7faf6; }
-    .answer-option[aria-pressed="true"] { border-color: #7e9e89; background: #eef5ee; color: var(--green-deep); }
-    .answer-option::before { content: ""; flex: none; width: 12px; height: 12px; margin-top: 1px; border: 1px solid #aab7ae; border-radius: 50%; background: white; }
-    .answer-option[aria-pressed="true"]::before { border: 4px solid var(--green); }
-    .reveal { display: none; margin-top: 10px; padding: 11px 12px; border-radius: 8px; background: #f0f4ef; color: #405449; font-size: 10px; line-height: 1.62; }
-    .reveal[data-visible="true"] { display: block; animation: enter .2s ease both; }
-    .reveal strong { color: var(--green-deep); }
-    .all-focus { display: grid; grid-template-columns: 1fr auto 1fr; align-items: stretch; gap: 9px; margin-top: 13px; }
-    .focus-view { padding: 12px; border: 1px solid #e0e4de; border-radius: 8px; background: #fcfcf9; }
-    .focus-view strong { display: block; font-size: 10px; }
-    .focus-view span { display: block; margin-top: 6px; color: var(--green-deep); font-size: 15px; font-weight: 750; font-variant-numeric: tabular-nums; }
-    .focus-view small { display: block; margin-top: 3px; color: var(--muted); font-size: 9px; line-height: 1.5; }
-    .focus-arrow { align-self: center; color: #84938a; font-size: 18px; }
-    .stakeholder-prompt { margin-top: 13px; padding: 12px; border: 1px dashed #bac9bf; border-radius: 9px; background: #f8faf6; }
-    .stakeholder-prompt label { display: block; margin-bottom: 6px; color: #485d4f; font-size: 9px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
-    .stakeholder-prompt select { width: 100%; min-height: 35px; padding: 6px 8px; border: 1px solid #d7ded7; border-radius: 7px; background: white; color: var(--ink); font-size: 10px; }
-    .stakeholder-answer { min-height: 34px; margin-top: 8px; color: #405449; font-size: 10px; line-height: 1.6; }
-    .full-lab-note { margin-top: 15px; padding: 14px 16px; border-radius: 10px; background: #ebece6; color: #59675e; font-size: 10px; line-height: 1.6; }
-    .visually-hidden { position: absolute !important; width: 1px !important; height: 1px !important; padding: 0 !important; margin: -1px !important; overflow: hidden !important; clip: rect(0,0,0,0) !important; white-space: nowrap !important; border: 0 !important; }
-    .toast { position: fixed; right: 20px; bottom: 18px; z-index: 50; max-width: 320px; padding: 10px 13px; border: 1px solid #bdd0c0; border-radius: 9px; background: #f5fbf5; box-shadow: var(--shadow); color: var(--green-deep); font-size: 11px; opacity: 0; transform: translateY(8px); pointer-events: none; transition: opacity .18s ease, transform .18s ease; }
-    .toast[data-visible="true"] { opacity: 1; transform: translateY(0); }
-    @media (max-width: 1120px) {
-      .sidebar { width: 220px; padding-left: 12px; padding-right: 12px; }
-      .workspace { margin-left: 220px; }
-      .main-wrap { padding-right: 25px; padding-left: 25px; }
-      .topbar { padding-right: 25px; padding-left: 25px; }
-      .lesson-layout { grid-template-columns: minmax(0,1.4fr) minmax(230px,.8fr); gap: 13px; }
-      .vocabulary-grid { grid-template-columns: repeat(3,minmax(0,1fr)); }
-    }
-    @media (max-width: 880px) {
-      .sidebar { position: sticky; inset: 0 0 auto; width: auto; height: auto; padding: 10px 16px 9px; border-right: 0; border-bottom: 1px solid #d4d8d0; }
-      .brand { padding: 0 2px 9px; }
-      .brand-mark { width: 30px; height: 30px; border-radius: 9px; }
-      .brand-name { font-size: 12px; }
-      .brand-tag { font-size: 8px; }
-      .nav-head { display: none; }
-      .stage-nav { display: flex; gap: 5px; overflow-x: auto; padding: 1px 0 3px; scrollbar-width: thin; }
-      .stage-link { flex: 0 0 auto; width: auto; min-height: 35px; grid-template-columns: 22px auto; gap: 6px; padding: 4px 8px; border-color: #d8dcd4; background: rgba(255,255,255,.36); }
-      .stage-number { width: 21px; height: 21px; font-size: 9px; }
-      .stage-label { font-size: 10px; white-space: nowrap; }
-      .stage-kind, .stage-check, .sidebar-note { display: none; }
-      .workspace { margin-left: 0; }
-      .topbar { position: static; height: 55px; }
-      .main-wrap { padding-top: 25px; }
-      .lesson-layout { grid-template-columns: minmax(0,1fr); }
-      .teaching-column { grid-template-columns: repeat(2,minmax(0,1fr)); align-items: start; }
-      .teaching-column .recon, .teaching-column .math-details { grid-column: 1/-1; }
-      .orientation-grid { grid-template-columns: minmax(0,1fr) minmax(235px,.8fr); }
-    }
-    @media (max-width: 620px) {
-      body { font-size: 14px; }
-      .sidebar { padding: 8px 10px 7px; }
-      .brand { gap: 8px; padding-bottom: 7px; }
-      .stage-link { min-height: 32px; padding: 3px 7px; }
-      .topbar { height: 49px; padding: 0 13px; }
-      .top-context { font-size: 9px; }
-      .top-actions { gap: 3px; }
-      .topbar .button { min-height: 31px; padding: 0 8px; font-size: 9px; }
-      .topbar .button svg { display: none; }
-      .main-wrap { padding: 20px 13px 35px; }
-      .page-heading { margin-bottom: 17px; }
-      h1 { font-size: 29px; }
-      .page-intro { font-size: 12px; }
-      .chart-head { padding: 15px 14px 8px; }
-      .chart-scale { font-size: 8px; }
-      .bridge-equation { gap: 5px; padding: 10px 12px; }
-      .bridge-endpoint { min-width: 0; flex: 1 1 90px; padding: 6px 7px; }
-      .bridge-endpoint strong { font-size: 13px; }
-      .equation-op { font-size: 12px; }
-      .delta-chip { flex: 1 0 100%; margin: 1px 0 0; text-align: center; }
-      .chart-wrap { min-height: 220px; padding-right: 0; }
-      .waterfall { min-height: 220px; }
-      .chart-legend { padding: 0 13px 13px; gap: 9px; }
-      .chart-footnote { flex-basis: 100%; margin: 1px 0 0; }
-      .preset-panel, .teaching-card { padding: 13px; }
-      .preset { min-height: 30px; padding: 0 8px; font-size: 9px; }
-      .teaching-column { grid-template-columns: 1fr; }
-      .teaching-column .recon, .teaching-column .math-details { grid-column: auto; }
-      .orientation-grid { grid-template-columns: 1fr; }
-      .orientation-hero { min-height: 230px; padding: 19px; }
-      .orientation-hero h2 { font-size: 27px; }
-      .hero-equation { gap: 6px; font-size: 9px; }
-      .hero-equation span { padding: 7px 8px; }
-      .concept-formulas { grid-template-columns: 1fr 1fr; gap: 7px; }
-      .formula-tile { padding: 12px; }
-      .formula-tile strong { font-size: 15px; }
-      .vocabulary-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
-      .vocabulary-item { min-height: 95px; }
-      .roadmap { grid-template-columns: repeat(7,90px); }
-      .orientation-bottom { grid-template-columns: 1fr; }
-      .scenario-lab { grid-template-columns: 1fr; }
-      .scenario-card.wide { grid-column: auto; }
-      .scenario-card { padding: 14px; }
-      .all-focus { grid-template-columns: 1fr; }
-      .focus-arrow { justify-self: center; transform: rotate(90deg); }
-      .footer-note { font-size: 8px; }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      html { scroll-behavior: auto; }
-      *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
-    }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PVM Learning Lab</title>
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="app-shell">
-    <aside class="sidebar" aria-label="Learning path">
-      <a class="brand" href="#" aria-label="PVM Learning Lab home">
-        <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M3.5 17.5h4l3-6 3 3 3.3-7h3.7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M17.5 7.5h3v3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-        <span><span class="brand-name">PVM Learning Lab</span><span class="brand-tag">Revenue &amp; GP</span></span>
-      </a>
-      <div class="nav-head"><span>Learning path</span><span>08 steps</span></div>
-      <nav class="stage-nav" id="stageNav" aria-label="Learning stages"></nav>
-      <div class="sidebar-note"><strong>One business. More detail.</strong>Every page reuses the same Product × Channel example and builds one layer onto the bridge.</div>
-    </aside>
-    <div class="workspace">
-      <header class="topbar">
-        <div class="top-context"><span class="live-dot" aria-hidden="true"></span><span>Illustrative training data</span><span aria-hidden="true">·</span><span id="scenarioNameTop">Mixed Reality</span></div>
-        <div class="top-actions">
-          <button class="button button-quiet" id="resetButton" type="button" title="Restore the illustrative base dataset">
-            <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4.5 7.2A6 6 0 1 1 4 12M4.5 7.2V3.8m0 3.4H8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Reset
-          </button>
-          <button class="button" id="editButton" type="button" title="Open the editable Product by Channel table">
-            <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3 4.5h14M3 8.5h14M3 12.5h14M3 16h14M7 3v14m6-14v14" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>Data table
-          </button>
-        </div>
-      </header>
-      <main class="main-wrap" id="mainContent">
-        <div id="stageContent"></div>
-        <details class="dataset-panel panel" id="datasetDetails">
-          <summary><span><span class="dataset-title">Illustrative Product × Channel data</span><span class="dataset-desc">Edit quantity, selling price, and cost in either period. The selected simulation updates from the same table.</span></span></summary>
-          <div class="editor-scroll"><table class="editor-table" id="editorTable"></table></div>
-          <p class="editor-note">All values are fictional and expressed in illustrative dollars. Quantity, price, and cost accept non-negative values. A zero historical base is flagged as “No comparable base.”</p>
-        </details>
-        <footer class="footer-note"><span><strong>Learning model:</strong> Period 1 economics anchor Quantity and Mix.</span><span>Illustrative values · No external runtime requests</span></footer>
-      </main>
-    </div>
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">PVM Learning Lab <small>visual first</small></div>
+    <nav class="progress" aria-label="Learning stages"></nav>
+    <div class="math-status" id="mathStatus">Checking math…</div>
   </div>
-  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+</header>
 
-  <script id="pvm-engine">
-  // The calculation layer is intentionally pure so it can be verified independently.
-  (() => {
-    const CHANNELS = ["Direct", "Distributor", "Online"];
-    const PRODUCTS = ["Core", "Plus", "Pro", "Legacy"];
-    const P1 = [
-      [100, 60, 25, 25],
-      [170, 110, 40, 40],
-      [65, 55, 35, 20]
-    ];
-    const ECONOMICS = [
-      [[100,62],[160,91],[240,130],[80,60]],
-      [[110,69],[170,97],[250,135],[85,61]],
-      [[120,77],[180,105],[265,143],[90,64]]
-    ];
-    const P2 = [
-      [100, 75, 45, 10],
-      [135, 135, 83, 15],
-      [45, 80, 65, 12]
-    ];
-    const PRICE_DELTA = [4, 5, 6, 2];
-    const COST_DELTA = [2, 3, 2, 1];
+<main class="app">
+  <section class="stage active" data-stage="0">
+    <div class="kicker">Start here</div>
+    <h1>See the bridge before you learn the formula.</h1>
+    <p class="question">Every page answers one question: <strong>what moved the result from Period 1 to Period 2?</strong></p>
+    <div class="orientation">
+      <div class="ladder">
+        <div class="layer">
+          <span class="n">1</span>
+          <h3>Start simple</h3>
+          <p>First combine all quantity and composition effects.</p>
+          <div class="split-row"><span class="pill accent">Price</span><span class="pill">Volume + Mix</span></div>
+        </div>
+        <div class="layer">
+          <span class="n">2</span>
+          <h3>Then isolate quantity</h3>
+          <p>Hold the old composition fixed and ask what total volume alone did.</p>
+          <div class="split-row"><span class="pill accent">Price</span><span class="pill">Quantity</span><span class="pill">Total Mix</span></div>
+        </div>
+        <div class="layer">
+          <span class="n">3</span>
+          <h3>Finally split the mix</h3>
+          <p>Separate <strong>where</strong> you sold from <strong>what</strong> you sold inside each channel.</p>
+          <div class="split-row"><span class="pill">Channel Mix</span><span class="pill">Product Mix</span></div>
+        </div>
+      </div>
+      <div class="dataset-note">One illustrative dataset is reused everywhere: <strong>3 channels × 4 SKUs</strong>. Gross Profit uses the same bridge plus Cost.</div>
+    </div>
+    <div class="pager"><span></span><button class="next" data-go="1">Start Revenue →</button></div>
+  </section>
 
-    function makeBase() {
-      const data = [];
-      CHANNELS.forEach((channel, j) => PRODUCTS.forEach((product, i) => {
-        const [p, c] = ECONOMICS[j][i];
-        data.push({
-          id: `${j}-${i}`, channel, product, legacy: product === "Legacy",
-          q1: P1[j][i], p1: p, c1: c,
-          q2: P2[j][i], p2: p + PRICE_DELTA[i] + j, c2: c + COST_DELTA[i]
-        });
-      }));
-      return data;
-    }
-    const BASE = makeBase();
-    const clone = rows => rows.map(row => ({ ...row }));
-    const sum = list => list.reduce((a, b) => a + b, 0);
-    const roundQuantity = value => Math.max(0, value);
-    const byChannel = (rows, field, channel) => sum(rows.filter(x => x.channel === channel).map(x => x[field]));
+  <section class="stage" data-stage="1">
+    <div class="kicker">Revenue · Step 1</div>
+    <h1>Revenue changed. Was it price, or everything else?</h1>
+    <p class="question">At this level, “Volume + Mix” intentionally combines total quantity and sales composition.</p>
+    <div class="lesson-card" data-view="rev2"></div>
+    <div class="pager"><button data-go="0">← Overview</button><button class="next" data-go="2">Split Volume + Mix →</button></div>
+  </section>
 
-    function directTotals(rows) {
-      let q1 = 0, q2 = 0, revenue1 = 0, revenue2 = 0, gp1 = 0, gp2 = 0;
-      for (const x of rows) {
-        q1 += x.q1; q2 += x.q2;
-        revenue1 += x.q1 * x.p1; revenue2 += x.q2 * x.p2;
-        gp1 += x.q1 * (x.p1 - x.c1); gp2 += x.q2 * (x.p2 - x.c2);
-      }
-      return { q1, q2, revenue1, revenue2, gp1, gp2 };
-    }
+  <section class="stage" data-stage="2">
+    <div class="kicker">Revenue · Step 2</div>
+    <h1>Now isolate pure quantity from composition.</h1>
+    <p class="question">Quantity asks: what if total units changed, but the Period‑1 mix stayed exactly the same?</p>
+    <div class="lesson-card" data-view="rev3"></div>
+    <div class="pager"><button data-go="1">← Back</button><button class="next" data-go="3">Split Total Mix →</button></div>
+  </section>
 
-    function calculate(inputRows, { focus = false } = {}) {
-      const rows = inputRows.filter(x => !focus || !x.legacy);
-      const totals = directTotals(rows);
-      const tq1 = totals.q1, tq2 = totals.q2;
-      const revenue = { begin: totals.revenue1, end: totals.revenue2, delta: totals.revenue2 - totals.revenue1 };
-      const gp = { begin: totals.gp1, end: totals.gp2, delta: totals.gp2 - totals.gp1 };
-      let priceR = 0, volumeMixR = 0, priceGP = 0, volumeMixGP = 0, costGP = 0;
-      for (const x of rows) {
-        const m1 = x.p1 - x.c1;
-        priceR += (x.p2 - x.p1) * x.q2;
-        volumeMixR += (x.q2 - x.q1) * x.p1;
-        priceGP += (x.p2 - x.p1) * x.q2;
-        costGP -= (x.c2 - x.c1) * x.q2;
-        volumeMixGP += (x.q2 - x.q1) * m1;
-      }
-      const baseValid = tq1 > 0;
-      let quantityR = null, totalMixR = null, quantityGP = null, totalMixGP = null;
-      if (baseValid) {
-        quantityR = 0; totalMixR = 0; quantityGP = 0; totalMixGP = 0;
-        for (const x of rows) {
-          const w1 = x.q1 / tq1;
-          quantityR += (tq2 - tq1) * w1 * x.p1;
-          totalMixR += (x.q2 - w1 * tq2) * x.p1;
-          quantityGP += (tq2 - tq1) * w1 * (x.p1 - x.c1);
-          totalMixGP += (x.q2 - w1 * tq2) * (x.p1 - x.c1);
-        }
-      }
-      const channelComparable = baseValid && tq2 > 0 && CHANNELS.every(channel => byChannel(rows, "q1", channel) > 0 && byChannel(rows, "q2", channel) > 0);
-      const newItems = rows.filter(x => x.q1 === 0 && x.q2 > 0);
-      const splitComparable = channelComparable && newItems.length === 0;
-      let channelR = splitComparable ? 0 : null;
-      let productR = splitComparable ? 0 : null;
-      let channelGP = splitComparable ? 0 : null;
-      let productGP = splitComparable ? 0 : null;
-      if (splitComparable) {
-        for (const channel of CHANNELS) {
-          const tq1j = byChannel(rows, "q1", channel);
-          const tq2j = byChannel(rows, "q2", channel);
-          const s1 = tq1j / tq1, s2 = tq2j / tq2;
-          for (const x of rows.filter(row => row.channel === channel)) {
-            const w1 = x.q1 / tq1j;
-            const w2 = x.q2 / tq2j;
-            channelR += tq2 * (s2 - s1) * w1 * x.p1;
-            productR += tq2 * s2 * (w2 - w1) * x.p1;
-            const m1 = x.p1 - x.c1;
-            channelGP += tq2 * (s2 - s1) * w1 * m1;
-            productGP += tq2 * s2 * (w2 - w1) * m1;
-          }
-        }
-      }
-      const discontinued = rows.filter(x => x.q1 > 0 && x.q2 === 0).map(x => `${x.product} · ${x.channel}`);
-      return {
-        rows, totals, revenue, gp, tq1, tq2,
-        revenueImpacts: { price: priceR, volumeMix: volumeMixR, quantity: quantityR, totalMix: totalMixR, channelMix: channelR, productMix: productR },
-        gpImpacts: { price: priceGP, volumeMix: volumeMixGP, quantity: quantityGP, totalMix: totalMixGP, channelMix: channelGP, productMix: productGP, cost: costGP },
-        flags: {
-          baseValid, channelComparable, splitComparable,
-          reason: !baseValid ? "Period 1 has zero total quantity, so prior-period shares are unavailable."
-            : !channelComparable ? "At least one channel has no comparable volume in one period; channel and product split is N/A."
-            : newItems.length ? `New item(s) have no observed Period 1 share: ${newItems.map(x => `${x.product} · ${x.channel}`).join(", ")}. Treat the detailed mix split as N/A.` : "",
-          newItems: newItems.map(x => `${x.product} · ${x.channel}`), discontinued
-        }
-      };
-    }
+  <section class="stage" data-stage="3">
+    <div class="kicker">Revenue · Step 3</div>
+    <h1>Split mix into <em>where</em> and <em>what</em>.</h1>
+    <p class="question"><strong>Channel Mix</strong> = where volume moved. <strong>Product Mix</strong> = what products gained or lost share inside each channel.</p>
+    <div class="lesson-card" data-view="rev4"></div>
+    <div class="pager"><button data-go="2">← Back</button><button class="next" data-go="4">Move to Gross Profit →</button></div>
+  </section>
 
-    function applyPreset(name, current = BASE) {
-      const rows = clone(current);
-      const p1Rows = rows.map(x => ({ q: x.q1, p: x.p1, c: x.c1 }));
-      if (name === "No Change") {
-        rows.forEach((x, k) => { x.q2 = p1Rows[k].q; x.p2 = p1Rows[k].p; x.c2 = p1Rows[k].c; });
-      } else if (name === "Price Only") {
-        rows.forEach((x, k) => { const prod = PRODUCTS.indexOf(x.product); const ch = CHANNELS.indexOf(x.channel); x.q2 = p1Rows[k].q; x.p2 = p1Rows[k].p + PRICE_DELTA[prod] + ch; x.c2 = p1Rows[k].c; });
-      } else if (name === "Pure Quantity Growth") {
-        rows.forEach((x, k) => { x.q2 = p1Rows[k].q * 1.15; x.p2 = p1Rows[k].p; x.c2 = p1Rows[k].c; });
-      } else if (name === "Product Mix Shift") {
-        rows.forEach((x, k) => { x.q2 = p1Rows[k].q; x.p2 = p1Rows[k].p; x.c2 = p1Rows[k].c; });
-        const direct = rows.filter(x => x.channel === "Direct");
-        const moved = sum(direct.map(x => x.q1)) * .14;
-        direct.find(x => x.product === "Core").q2 -= moved;
-        direct.find(x => x.product === "Pro").q2 += moved;
-      } else if (name === "Channel Mix Shift") {
-        const total = sum(p1Rows.map(x => x.q));
-        const changes = { Direct: total * .08, Distributor: -total * .13, Online: total * .05 };
-        rows.forEach((x, k) => {
-          const oldChannel = byChannel(rows, "q1", x.channel);
-          const newChannel = oldChannel + changes[x.channel];
-          x.q2 = (x.q1 / oldChannel) * newChannel;
-          x.p2 = p1Rows[k].p; x.c2 = p1Rows[k].c;
-        });
-      } else if (name === "Cost Shock") {
-        rows.forEach((x, k) => { x.q2 = p1Rows[k].q; x.p2 = p1Rows[k].p; x.c2 = p1Rows[k].c + 8; });
-      } else if (name === "Legacy SKU Removed") {
-        const mixed = applyPreset("Mixed Reality", rows);
-        mixed.forEach(x => { if (x.legacy) x.q2 = 0; });
-        return mixed;
-      } else if (name === "Mixed Reality") {
-        rows.forEach(x => {
-          const b = BASE.find(y => y.id === x.id);
-          x.q2 = x.q1 + (b.q2 - b.q1);
-          x.p2 = x.p1 + (b.p2 - b.p1);
-          x.c2 = x.c1 + (b.c2 - b.c1);
-        });
-      } else {
-        throw new Error(`Unknown preset: ${name}`);
-      }
-      return rows;
-    }
+  <section class="stage" data-stage="4">
+    <div class="kicker">Gross Profit · Step 1</div>
+    <h1>Gross Profit adds one new force: cost.</h1>
+    <p class="question">Price can help, cost can hurt, and quantity plus mix still remain combined at this first level.</p>
+    <div class="lesson-card" data-view="gp3"></div>
+    <div class="pager"><button data-go="3">← Back</button><button class="next" data-go="5">Split Volume + Mix →</button></div>
+  </section>
 
-    function difference(a, b) { return Math.abs(a - b); }
-    function close(a, b, tolerance = 1e-7) { return Number.isFinite(a) && Number.isFinite(b) && difference(a, b) <= tolerance * Math.max(1, Math.abs(a), Math.abs(b)); }
-    window.PVM_LAB_CORE = { CHANNELS, PRODUCTS, BASE, clone, calculate, applyPreset, directTotals, close };
-  })();
-  </script>
-  <script id="pvm-ui">
-  (() => {
-    const CORE = window.PVM_LAB_CORE;
-    const STAGES = [
-      { id: 0, short: "Start here", kind: "Orientation", title: "One business, one bridge", intro: "Learn the vocabulary first. Then follow the same business result as each new page separates one more effect.", type: "orientation" },
-      { id: 1, short: "Revenue · 2 factors", kind: "Revenue", title: "What changed revenue?", intro: "Separate selling-price change from the combined effect of quantity and sales composition.", type: "analysis", metric: "revenue", components: [["price","Price"],["volumeMix","Volume + Mix"]], changed: "Price is isolated using Period 2 quantity. Everything else caused by how many units sold and what was sold remains together in Volume + Mix.", held: "The dataset is Product × Channel. Period 1 prices anchor the combined quantity-and-composition component.", business: "A positive Volume + Mix result means the sales basket, total quantity, or both lifted revenue at Period 1 prices. It is not a pure quantity result.", stakeholder: "Revenue moved by {delta}. Price contributed {price}; the combined quantity and sales-composition effect contributed {mix}." },
-      { id: 2, short: "Revenue · 3 factors", kind: "Revenue", title: "How much was pure quantity?", intro: "Hold the Period 1 product-and-channel composition steady to isolate pure growth in total units.", type: "analysis", metric: "revenue", components: [["price","Price"],["quantity","Quantity"],["totalMix","Total Mix"]], changed: "The old Volume + Mix amount is now split. Quantity scales the Period 1 basket up or down; Total Mix captures the residual composition change.", held: "Quantity uses Period 1 Product × Channel shares and Period 1 selling prices. Total Mix uses those same Period 1 prices.", business: "Quantity answers what the change would have been if total units moved but the original sales composition stayed fixed. Total Mix is the additional effect of composition.", stakeholder: "At Period 1 prices, pure quantity contributed {quantity}. A further {mix} came from the sales composition changing." },
-      { id: 3, short: "Revenue · 4 factors", kind: "Revenue", title: "Where did the mix move?", intro: "Split Total Mix into the channel where units were sold and the products sold within each channel.", type: "analysis", metric: "revenue", components: [["price","Price"],["quantity","Quantity"],["channelMix","Channel Mix"],["productMix","Product Mix"]], changed: "Channel Mix changes where total units are sold. Product Mix then changes what is sold inside each channel.", held: "Revenue mix is valued at Period 1 selling prices. The decomposition is Channel first, then Product within Channel.", business: "Channel Mix asks whether volume moved toward channels with higher or lower baseline revenue per unit. Product Mix asks whether each channel sold a higher- or lower-value product basket.", stakeholder: "The channel shift contributed {channel}; product composition within channels contributed {product}. These are revenue effects valued at Period 1 prices." },
-      { id: 4, short: "Gross Profit · 3 factors", kind: "Gross Profit", title: "What changed gross profit?", intro: "Keep Price, combined Volume + Mix, and Cost separate while moving from revenue to gross profit.", type: "analysis", metric: "gp", components: [["price","Price"],["volumeMix","Volume + Mix"],["cost","Cost"]], changed: "Price is isolated on Period 2 units. Cost is isolated with higher cost shown as a negative contribution. Quantity and composition remain combined.", held: "Period 1 unit gross margin values the combined Volume + Mix effect. Price and Cost use Period 2 quantity.", business: "A cost increase reduces gross profit. Volume + Mix is still a combined effect here; it is not pure unit growth.", stakeholder: "Gross Profit moved by {delta}. Price contributed {price}, Cost {cost}, and the combined quantity and composition effect {mix}." },
-      { id: 5, short: "Gross Profit · 4 factors", kind: "Gross Profit", title: "Separate quantity from total mix", intro: "Break the combined Volume + Mix effect apart while keeping Price and Cost isolated.", type: "analysis", metric: "gp", components: [["price","Price"],["quantity","Quantity"],["totalMix","Total Mix"],["cost","Cost"]], changed: "Pure Quantity scales the original Period 1 gross-margin basket. Total Mix captures the additional composition effect.", held: "Period 1 unit gross margin anchors Quantity and Total Mix. Cost uses Period 2 quantity and the agreed negative sign convention.", business: "This view shows whether total unit growth helped at the old basket margin, separately from whether the composition of units changed.", stakeholder: "Pure quantity contributed {quantity} to Gross Profit, and composition added {mix}, before the separate Price and Cost effects." },
-      { id: 6, short: "Gross Profit · 5 factors", kind: "Gross Profit", title: "Read the full PVM bridge", intro: "See the full stepwise bridge: Price, Quantity, Channel Mix, Product Mix, and Cost.", type: "analysis", metric: "gp", components: [["price","Price"],["quantity","Quantity"],["channelMix","Channel Mix"],["productMix","Product Mix"],["cost","Cost"]], changed: "Channel Mix explains where volume moved. Product Mix is then calculated at current channel volume, after Channel Mix has been accounted for.", held: "Mix uses Period 1 unit gross margin. The fixed attribution order is Channel first, then Product within Channel; the interaction is assigned to Product Mix.", business: "A positive Product Mix contribution can coexist with lower total Gross Profit. It describes a shift in sales composition, not why the shift happened.", stakeholder: "Gross Profit changed by {delta}. The channel shift contributed {channel}, product mix within channels {product}, and cost {cost}; read these alongside Price and Quantity." }
-    ];
-    const PRESETS = ["Mixed Reality","No Change","Price Only","Pure Quantity Growth","Product Mix Shift","Channel Mix Shift","Cost Shock","Legacy SKU Removed"];
-    const stageNav = document.getElementById("stageNav");
-    const stageContent = document.getElementById("stageContent");
-    const editorTable = document.getElementById("editorTable");
-    const datasetDetails = document.getElementById("datasetDetails");
-    const toastEl = document.getElementById("toast");
-    let activeStage = 0;
-    let state = CORE.clone(CORE.BASE);
-    let scenario = "Mixed Reality";
-    let revealAnswers = {};
-    let toastTimer;
+  <section class="stage" data-stage="5">
+    <div class="kicker">Gross Profit · Step 2</div>
+    <h1>Separate pure quantity from Gross Profit mix.</h1>
+    <p class="question">Mix is valued at Period‑1 unit margin so later price and cost changes do not contaminate it.</p>
+    <div class="lesson-card" data-view="gp4"></div>
+    <div class="pager"><button data-go="4">← Back</button><button class="next" data-go="6">Split Total Mix →</button></div>
+  </section>
 
-    const sum = values => values.reduce((total, value) => total + value, 0);
-    const esc = value => String(value).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
-    const money = value => value == null || !Number.isFinite(value) ? "N/A" : new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(value);
-    const moneyExact = value => value == null || !Number.isFinite(value) ? "N/A" : new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value);
-    const signed = value => value == null || !Number.isFinite(value) ? "N/A" : `${value > 0 ? "+" : value < 0 ? "−" : ""}${money(Math.abs(value))}`;
-    const signedExact = value => value == null || !Number.isFinite(value) ? "N/A" : `${value > 0 ? "+" : value < 0 ? "−" : ""}${moneyExact(Math.abs(value))}`;
-    const number = value => Number.isFinite(value) ? new Intl.NumberFormat("en-US", { maximumFractionDigits: 1 }).format(value) : "N/A";
-    const percent = (n, d) => d ? `${(100*n/d).toFixed(1)}%` : "N/A";
-    const valueClass = value => value > 0 ? "positive" : value < 0 ? "negative" : "neutral";
-    const coreFor = stage => stage.metric === "revenue" ? "revenueImpacts" : "gpImpacts";
-    const endpoint = stage => stage.metric === "revenue" ? "Revenue" : "Gross Profit";
-    const stageById = id => STAGES.find(x => x.id === id) || STAGES[0];
-    const model = (focus = false) => CORE.calculate(state, { focus });
+  <section class="stage" data-stage="6">
+    <div class="kicker">Gross Profit · Full bridge</div>
+    <h1>Price. Quantity. Channel Mix. Product Mix. Cost.</h1>
+    <p class="question">This is the full analytical bridge. Channel is attributed first; Product Mix is then measured inside the new channel volumes.</p>
+    <div class="lesson-card" data-view="gp5"></div>
+    <div class="pager"><button data-go="5">← Back</button><button class="next" data-go="7">Practice interpretation →</button></div>
+  </section>
 
-    function showToast(text) {
-      toastEl.textContent = text;
-      toastEl.dataset.visible = "true";
-      clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => { toastEl.dataset.visible = "false"; }, 2300);
-    }
-
-    function renderNav() {
-      const items = [...STAGES, { id: 7, short: "Interpretation lab", kind: "Judgment", title: "Interpretation Lab", type: "lab" }];
-      stageNav.innerHTML = items.map(s => `<button class="stage-link" type="button" data-stage="${s.id}" aria-current="${activeStage === s.id ? "step" : "false"}"><span class="stage-number">${s.id}</span><span class="stage-label">${esc(s.short)}<span class="stage-kind">${esc(s.kind)}</span></span><span class="stage-check" aria-hidden="true">${activeStage > s.id ? "✓" : ""}</span></button>`).join("");
-    }
-
-    function stageHeading(stage, current, isLab = false) {
-      return `<header class="page-heading page-enter">
-        <div class="eyebrow"><span>Stage ${stage.id} of 7</span><span class="sep"></span><span>${esc(stage.kind)}</span></div>
-        <h1>${esc(stage.title)}</h1>
-        <p class="page-intro">${esc(stage.intro)}</p>
-        <div class="heading-foot"><span class="data-tag"><span aria-hidden="true">●</span>${esc(scenario)} · same Product × Channel data</span>${!isLab ? `<span class="lens-tag">${esc(endpoint(stage))} bridge</span>` : `<span class="lens-tag">Read the result responsibly</span>`}<span class="step-tag">${isLab ? "Judgment & communication" : "Question: " + esc(stage.question || "What do these effects explain?")}</span></div>
-      </header>`;
-    }
-
-    function renderOrientation() {
-      const stage = STAGES[0];
-      const m = model();
-      const road = [
-        ["2 factors","Price + Volume/Mix"],["3 factors","+ Quantity"],["4 factors","+ Total Mix"],["4 factors","Channel + Product"],["3 factors","GP + Cost"],["4 factors","Quantity + Mix"],["5 factors","Full GP bridge"]
-      ];
-      return `${stageHeading(stage,m)}
-        <section class="orientation-grid" aria-label="PVM orientation">
-          <div class="orientation-hero">
-            <div><div class="eyebrow">A learning journey in eight short stages</div><h2>Follow one business result as the explanation gets more precise.</h2><p>Each bridge starts with Period 1, adds the measured effects, and reconciles to Period 2. First see the business story. Open Show the Math when you want the analyst detail.</p></div>
-            <div class="hero-equation" aria-label="Beginning value plus measured impacts equals ending value"><span>Beginning value</span><b>+</b><span>Impact bridge</span><b>=</b><span>Ending value</span></div>
-          </div>
-          <section class="vocab-panel panel" aria-labelledby="vocab-title"><h2 id="vocab-title">The three inputs</h2>
-            <div class="vocab-row"><span class="vocab-letter">P</span><div><strong>Selling price per unit</strong><span>What one unit sells for</span></div></div>
-            <div class="vocab-row"><span class="vocab-letter">C</span><div><strong>Cost per unit</strong><span>What one unit costs to make or buy</span></div></div>
-            <div class="vocab-row"><span class="vocab-letter">Q</span><div><strong>Quantity</strong><span>How many units sold</span></div></div>
-          </section>
-        </section>
-        <section class="concept-formulas" aria-label="Core business formulas">
-          <div class="formula-tile"><small>Revenue</small><strong>P × Q</strong><p>Selling price per unit × units sold</p></div>
-          <div class="formula-tile"><small>Gross Profit</small><strong>(P − C) × Q</strong><p>Unit gross margin × units sold</p></div>
-        </section>
-        <section class="vocabulary-panel panel"><div class="section-line"><h2>Five effects, with different jobs</h2><small>Volume + Mix is not pure Quantity</small></div>
-          <div class="vocabulary-grid">
-            <div class="vocabulary-item"><strong>Volume + Mix</strong><p>Quantity and sales-composition change together, valued at Period 1 economics.</p></div>
-            <div class="vocabulary-item"><strong>Quantity</strong><p>Pure change in total units with the Period 1 composition held constant.</p></div>
-            <div class="vocabulary-item"><strong>Total Mix</strong><p>Composition change after pure Quantity has been isolated.</p></div>
-            <div class="vocabulary-item"><strong>Channel Mix</strong><p><b>Where</b> we sell: movement across channels.</p></div>
-            <div class="vocabulary-item"><strong>Product Mix</strong><p><b>What</b> we sell within each channel.</p></div>
-          </div>
-        </section>
-        <section class="roadmap-panel panel"><div class="section-line"><h2>Follow the bridge, one split at a time</h2><small>Same data · increasing detail</small></div>
-          <div class="roadmap" aria-label="Analytical progression">${road.map((r,i)=>`<div class="roadmap-step"><span class="roadmap-dot">${i+1}</span><strong>${esc(r[0])}</strong><span>${esc(r[1])}</span></div>`).join("")}</div>
-        </section>
-        <div class="orientation-bottom"><div class="note-panel"><strong>Revenue mix uses selling price.</strong> Revenue Product Mix is valued at Period 1 selling price, not gross margin.</div><div class="note-panel"><strong>Gross Profit mix uses unit margin.</strong> Once price and cost have their own effects, mix uses Period 1 unit gross margin so those effects do not leak into Mix.</div></div>
-        <div class="orientation-bottom"><div class="note-panel"><strong>Channel first → Product within Channel.</strong> Total Mix stays the same; the split between Channel and Product Mix depends on this chosen order.</div><div class="note-panel"><strong>Same illustrative dataset on stages 1–6.</strong> Try a preset, move to another stage, and see the same underlying period change explained in more detail.</div></div>`;
-    }
-
-    const FORMULAS = {
-      priceR: "Σ (P₂ᵢⱼ − P₁ᵢⱼ) × Q₂ᵢⱼ",
-      volumeMixR: "Σ (Q₂ᵢⱼ − Q₁ᵢⱼ) × P₁ᵢⱼ",
-      quantityR: "(TQ₂ − TQ₁) × Σ (W₁ᵢⱼ × P₁ᵢⱼ)",
-      totalMixR: "Σ [Q₂ᵢⱼ − (W₁ᵢⱼ × TQ₂)] × P₁ᵢⱼ",
-      channelMixR: "ΣⱼΣᵢ [TQ₂ × (S₂ⱼ − S₁ⱼ) × W₁(i|j) × P₁ᵢⱼ]",
-      productMixR: "ΣⱼΣᵢ [TQ₂ⱼ × (W₂(i|j) − W₁(i|j)) × P₁ᵢⱼ]",
-      priceGP: "Σ (P₂ᵢⱼ − P₁ᵢⱼ) × Q₂ᵢⱼ",
-      volumeMixGP: "Σ (Q₂ᵢⱼ − Q₁ᵢⱼ) × M₁ᵢⱼ",
-      quantityGP: "(TQ₂ − TQ₁) × Σ (W₁ᵢⱼ × M₁ᵢⱼ)",
-      totalMixGP: "Σ [Q₂ᵢⱼ − (W₁ᵢⱼ × TQ₂)] × M₁ᵢⱼ",
-      channelMixGP: "ΣⱼΣᵢ [TQ₂ × (S₂ⱼ − S₁ⱼ) × W₁(i|j) × M₁ᵢⱼ]",
-      productMixGP: "ΣⱼΣᵢ [TQ₂ⱼ × (W₂(i|j) − W₁(i|j)) × M₁ᵢⱼ]",
-      cost: "− Σ (C₂ᵢⱼ − C₁ᵢⱼ) × Q₂ᵢⱼ"
-    };
-    function formulaKey(stage, key) {
-      const rev = stage.metric === "revenue";
-      return key === "price" ? (rev ? "priceR" : "priceGP")
-        : key === "volumeMix" ? (rev ? "volumeMixR" : "volumeMixGP")
-        : key === "quantity" ? (rev ? "quantityR" : "quantityGP")
-        : key === "totalMix" ? (rev ? "totalMixR" : "totalMixGP")
-        : key === "channelMix" ? (rev ? "channelMixR" : "channelMixGP")
-        : key === "productMix" ? (rev ? "productMixR" : "productMixGP")
-        : key === "cost" ? "cost" : key;
-    }
-    function whatIs(stage, key) {
-      const rev = stage.metric === "revenue";
-      const economics = rev ? "Period 1 selling price" : "Period 1 unit gross margin";
-      return key === "price" ? "Change in unit selling price × Period 2 quantity."
-        : key === "cost" ? "Negative of the unit cost change × Period 2 quantity; higher cost lowers Gross Profit."
-        : key === "volumeMix" ? `All quantity and composition change together at ${economics}.`
-        : key === "quantity" ? `Change in total units × the Period 1 basket value per unit, held at old shares and ${economics}.`
-        : key === "totalMix" ? `The extra composition change after pure Quantity, valued at ${economics}.`
-        : key === "channelMix" ? `Change channel shares first; keep each channel’s Period 1 product shares, valued at ${economics}.`
-        : `At current channel volume, change product shares within each channel, valued at ${economics}.`;
-    }
-    function analystPanel(stage, calc) {
-      const type = stage.metric;
-      const valueKey = type === "revenue" ? "revenueImpacts" : "gpImpacts";
-      const impacts = calc[valueKey];
-      const formulaRows = stage.components.map(([key,label]) => {
-        const fk = formulaKey(stage,key);
-        const val = impacts[key];
-        return `<div class="math-row"><div class="math-label">${esc(label)} · ${signedExact(val)}</div><code class="formula">${esc(FORMULAS[fk])}</code><p class="math-copy">${esc(whatIs(stage,key))}</p></div>`;
-      }).join("");
-      const orderCaveat = stage.components.some(x=>x[0]==="channelMix") ? `<div class="caveat"><strong>Attribution order:</strong> Channel first → Product within Channel. The interaction of both share changes is assigned to Product Mix. Total Mix is invariant to the split, but Channel and Product values depend on this order.</div>` : "";
-      const granularity = `<div class="caveat"><strong>Granularity:</strong> This is a Product × Channel model. If unit prices or costs differ by channel, a Product-only model can attribute Price, Cost, and Mix differently. The underlying total result is unchanged; the attribution becomes more detailed.</div>`;
-      const focusNote = `<div class="caveat"><strong>Comparable items:</strong> New products, discontinued products, channels without a prior-period base, free goods, returns, and credit notes should be flagged and reviewed. Do not silently turn an unavailable historical share into an ordinary zero.</div>`;
-      return `<details class="math-details panel"><summary>Analyst Mode · Show the Math</summary><div class="math-body">
-        <div class="math-row"><div class="math-label">Period totals</div><code class="formula">TQₜ = ΣⱼΣᵢ Qₜᵢⱼ · M₁ᵢⱼ = P₁ᵢⱼ − C₁ᵢⱼ</code><p class="math-copy">TQ₁ ${number(calc.tq1)} → TQ₂ ${number(calc.tq2)} units. Beginning ${esc(endpoint(stage))} ${moneyExact(calc[type].begin)}; ending ${moneyExact(calc[type].end)}.</p></div>
-        ${formulaRows}
-        <div class="math-row"><div class="math-label">Required bridge</div><code class="formula">${esc(endpoint(stage))}₂ − ${esc(endpoint(stage))}₁ = Σ component impacts = ${moneyExact(calc[type].delta)}</code><p class="math-copy">All impacts use full precision in the calculation. The visual rounds display labels only.</p></div>
-        ${type === "gp" ? `<div class="caveat"><strong>Cost sign:</strong> −Σ(C₂−C₁)×Q₂. A cost increase is negative and a cost decrease is positive.</div>` : `<div class="caveat"><strong>Revenue mix basis:</strong> Channel and Product Mix use Period 1 selling price, not gross margin.</div>`}
-        ${orderCaveat}${granularity}${focusNote}${calc.flags.reason ? `<div class="caveat"><strong>No comparable base:</strong> ${esc(calc.flags.reason)}</div>` : ""}${calc.flags.discontinued.length ? `<div class="caveat"><strong>Discontinued item flag:</strong> ${esc(calc.flags.discontinued.join(", "))}. The Period 1 share exists, so a zero Period 2 share is visible in the calculation; interpret the attribution with this flag.</div>` : ""}
-      </div></details>`;
-    }
-
-    function renderWaterfall(stage, calc) {
-      const type = stage.metric;
-      const selected = type === "revenue" ? calc.revenue : calc.gp;
-      const impacts = calc[type === "revenue" ? "revenueImpacts" : "gpImpacts"];
-      const missing = stage.components.find(([key]) => impacts[key] == null);
-      if (missing) {
-        return `<div class="panel" style="padding:20px;margin:12px 18px 18px"><strong style="font-size:12px">Detailed waterfall is unavailable</strong><p style="margin:7px 0 0;color:var(--ink-soft);font-size:11px;line-height:1.6">${esc(calc.flags.reason || "This detailed split does not have a comparable historical base.")} The beginning and ending totals are still calculated directly. Use the combined view at the previous stage while you review the data.</p><p style="margin:8px 0 0;font-size:10px;color:var(--muted)">Beginning ${esc(endpoint(stage))}: ${moneyExact(selected.begin)} · Ending ${esc(endpoint(stage))}: ${moneyExact(selected.end)}</p></div>`;
-      }
-      const points = [{ label: "Start", value: 0, key: "start" }, ...stage.components.map(([key,label]) => ({ label, value: impacts[key], key })), { label: "Net Δ", value: selected.delta, key: "end" }];
-      const width = 900, height = 290, left = 53, right = 20, top = 26, bottom = 56;
-      const plotW = width - left - right, plotH = height - top - bottom;
-      const running = [0];
-      for (let i=1;i<points.length-1;i++) running.push(running[running.length-1] + points[i].value);
-      running.push(selected.delta);
-      const lo = Math.min(0, ...running), hi = Math.max(0, ...running);
-      const pad = Math.max((hi-lo)*.16, Math.max(Math.abs(hi),Math.abs(lo),1)*.055, 1);
-      const min = lo-pad, max = hi+pad;
-      const y = v => top + (max-v)/(max-min)*plotH;
-      const step = plotW/points.length, barW = Math.min(62, step*.47);
-      const zeroY = y(0);
-      const ticks = 4;
-      let svg = `<svg class="waterfall" viewBox="0 0 ${width} ${height}" role="img" aria-labelledby="wfTitle wfDesc"><title id="wfTitle">${esc(endpoint(stage))} contribution waterfall</title><desc id="wfDesc">Starting at zero contribution, each component is added in order. The net change is ${esc(moneyExact(selected.delta))}. Period 1 ${esc(endpoint(stage))} is ${esc(moneyExact(selected.begin))}; Period 2 is ${esc(moneyExact(selected.end))}.</desc>`;
-      for (let i=0;i<=ticks;i++) {
-        const v = min+(max-min)*i/ticks, yy=y(v);
-        svg += `<line class="wf-grid" x1="${left}" y1="${yy}" x2="${width-right}" y2="${yy}"/><text class="wf-axis-label" x="${left-7}" y="${yy+3}" text-anchor="end">${esc(number(v))}</text>`;
-      }
-      svg += `<line class="wf-zero" x1="${left}" y1="${zeroY}" x2="${width-right}" y2="${zeroY}"/><text class="wf-axis-label" x="${left}" y="${top-10}">Cumulative impact ($)</text>`;
-      for (let i=0;i<points.length;i++) {
-        const p=points[i], cx=left+step*(i+.5);
-        if (i===0) {
-          svg += `<circle cx="${cx}" cy="${zeroY}" r="5" fill="#fffefa" stroke="#60756a" stroke-width="2"><title>Beginning contribution: $0.00; total ${esc(endpoint(stage))} ${esc(moneyExact(selected.begin))}</title></circle>`;
-          svg += `<text class="wf-value" x="${cx}" y="${zeroY-11}" text-anchor="middle">${esc(money(0))}</text>`;
-        } else if (i===points.length-1) {
-          const yy=y(selected.delta), h=Math.abs(zeroY-yy), by=Math.min(zeroY,yy);
-          if (Math.abs(h)>1) svg += `<rect class="wf-bar ${selected.delta>0?"wf-positive":selected.delta<0?"wf-negative":"wf-neutral"}" x="${cx-barW/2}" y="${by}" width="${barW}" height="${Math.max(h,2)}" rx="4"><title>Net change: ${esc(moneyExact(selected.delta))}; total changes from ${esc(moneyExact(selected.begin))} to ${esc(moneyExact(selected.end))}</title></rect>`;
-          else svg += `<line class="wf-zero-mark" x1="${cx-barW/2}" y1="${zeroY}" x2="${cx+barW/2}" y2="${zeroY}"><title>Net change: ${esc(moneyExact(selected.delta))}</title></line>`;
-          svg += `<text class="wf-value" x="${cx}" y="${selected.delta>=0?Math.min(zeroY,yy)-8:Math.max(zeroY,yy)+14}" text-anchor="middle">${esc(signed(selected.delta))}</text>`;
-        } else {
-          const previous=running[i-1], next=previous+p.value, y1=y(previous), y2=y(next), topY=Math.min(y1,y2), h=Math.abs(y1-y2);
-          const cls=p.value>0?"wf-positive":p.value<0?"wf-negative":"wf-neutral";
-          if (i>1) svg += `<line class="wf-connector" x1="${left+step*(i-.5)+barW/2}" y1="${y(previous)}" x2="${cx-barW/2}" y2="${y(previous)}"/>`;
-          if (Math.abs(h)>1) svg += `<rect class="wf-bar ${cls}" x="${cx-barW/2}" y="${topY}" width="${barW}" height="${Math.max(h,2)}" rx="4"><title>${esc(p.label)}: ${esc(signedExact(p.value))}; cumulative ${esc(moneyExact(previous))} to ${esc(moneyExact(next))}</title></rect>`;
-          else svg += `<line class="wf-zero-mark" x1="${cx-barW/2}" y1="${y1}" x2="${cx+barW/2}" y2="${y1}"><title>${esc(p.label)}: ${esc(signedExact(p.value))}; no visible movement</title></line>`;
-          const labelY=p.value>=0?topY-7:topY+h+13;
-          svg += `<text class="wf-value" x="${cx}" y="${Math.max(13,Math.min(height-bottom+1,labelY))}" text-anchor="middle">${esc(signed(p.value))}</text>`;
-        }
-        const wrapLabel = p.label.length>13 ? [p.label.slice(0,13),p.label.slice(13)] : [p.label];
-        svg += `<text class="wf-x-label" x="${cx}" y="${height-32}" text-anchor="middle">${esc(wrapLabel[0])}</text>`;
-        if (wrapLabel[1]) svg += `<text class="wf-x-label" x="${cx}" y="${height-19}" text-anchor="middle">${esc(wrapLabel[1])}</text>`;
-      }
-      svg += `</svg>`;
-      return svg;
-    }
-
-    function reconciliation(stage, calc) {
-      const endpointValue = stage.metric === "revenue" ? calc.revenue : calc.gp;
-      const impactSet = calc[stage.metric === "revenue" ? "revenueImpacts" : "gpImpacts"];
-      const vals = stage.components.map(([key]) => impactSet[key]);
-      if (vals.some(x => x == null)) return `<section class="recon panel"><div class="recon-top"><span class="recon-title">Reconciliation</span><span class="recon-status status-unavailable">No comparable base</span></div><div class="recon-equation"><span>Beginning ${esc(endpoint(stage))} <strong>${moneyExact(endpointValue.begin)}</strong></span><span>→</span><span>Ending <strong>${moneyExact(endpointValue.end)}</strong></span></div><div class="recon-gap">Direct total change: ${moneyExact(endpointValue.delta)} · detailed split marked N/A; see Analyst Mode.</div></section>`;
-      const attributed=sum(vals), gap=endpointValue.delta-attributed;
-      const pass=CORE.close(attributed,endpointValue.delta,1e-9);
-      return `<section class="recon panel"><div class="recon-top"><span class="recon-title">Reconciliation</span><span class="recon-status ${pass?"status-pass":"status-caution"}">${pass?"Balances":"Check needed"}</span></div><div class="recon-equation"><span>Impacts sum to <strong>${moneyExact(attributed)}</strong></span><span>·</span><span>Actual change <strong>${moneyExact(endpointValue.delta)}</strong></span></div><div class="recon-gap">Gap ${moneyExact(gap)} · tolerance ${pass?"passed":"not passed"}</div></section>`;
-    }
-
-    function replaceTemplate(template, vals) { return template.replace(/\{(delta|price|mix|quantity|channel|product|cost)\}/g, (_,key) => esc(signed(vals[key]))); }
-
-    function renderAnalysis(stage) {
-      const calc=model();
-      const endpointValue=stage.metric === "revenue" ? calc.revenue : calc.gp;
-      const impactSet=calc[stage.metric === "revenue" ? "revenueImpacts" : "gpImpacts"];
-      const controls=PRESETS.map(name=>`<button class="preset" type="button" data-preset="${esc(name)}" aria-pressed="${scenario===name}">${esc(name)}</button>`).join("");
-      const math=analystPanel(stage,calc);
-      const metrics=stage.components.map(([key,label])=>`<span class="fact-pill ${valueClass(impactSet[key])}">${esc(label)} ${esc(signed(impactSet[key]))}</span>`).join("");
-      const bridge=stage.components.map(([key,label],index)=>`<span class="bridge-endpoint bridge-impact with-op"><span class="equation-op" aria-hidden="true">${index===0?"→":"+"}</span><small>${esc(label)}</small><strong class="${valueClass(impactSet[key])}">${esc(signed(impactSet[key]))}</strong></span>`).join("");
-      const vals={delta:endpointValue.delta,price:impactSet.price,mix:impactSet.volumeMix,quantity:impactSet.quantity,channel:impactSet.channelMix,product:impactSet.productMix,cost:impactSet.cost};
-      const answer=replaceTemplate(stage.stakeholder,vals);
-      const caution=calc.flags.reason?`<p class="caveat" role="note"><strong>Data flag:</strong> ${esc(calc.flags.reason)}</p>`:calc.flags.discontinued.length?`<p class="caveat" role="note"><strong>Data flag:</strong> Discontinued items are present: ${esc(calc.flags.discontinued.join(", "))}. Their current-period share is zero; interpret Product Mix with care.</p>`:"";
-      return `${stageHeading(stage,calc)}
-        <section class="lesson-layout" aria-label="${esc(endpoint(stage))} analysis">
-          <div class="visual-column">
-            <section class="chart-panel panel" aria-label="${esc(endpoint(stage))} impact waterfall">
-              <div class="chart-head"><div><h2 class="chart-title">${esc(endpoint(stage))} · impact waterfall</h2><p class="chart-subtitle">Cumulative component contribution, with exact period totals above</p></div><span class="chart-scale">Impact scale · zero starts here</span></div>
-              <div class="bridge-equation" aria-label="Beginning value, impact components, ending value">
-                <span class="bridge-endpoint bridge-period"><small>Period 1 · Beginning</small><strong>${money(endpointValue.begin)}</strong></span>
-                ${bridge}
-                <span class="bridge-endpoint bridge-period with-op"><span class="equation-op" aria-hidden="true">→</span><small>Period 2 · Ending</small><strong>${money(endpointValue.end)}</strong></span>
-                <span class="delta-chip">Net ${endpoint(stage)} change ${signed(endpointValue.delta)}</span>
-              </div>
-              <div class="chart-wrap" id="chartWrap">${renderWaterfall(stage,calc)}</div>
-              <div class="chart-legend"><span class="legend-item"><i class="legend-swatch" style="background:var(--green)"></i>Positive contribution (+)</span><span class="legend-item"><i class="legend-swatch" style="background:var(--red)"></i>Negative contribution (−)</span><span class="legend-item"><i class="legend-swatch" style="background:#73847a"></i>Zero / no movement</span><span class="chart-footnote">Hover or focus a bar for the exact amount</span></div>
-            </section>
-            <section class="preset-panel panel"><div class="section-line"><h2>Try a simulation</h2><small>Current: <strong id="scenarioName">${esc(scenario)}</strong></small></div><div class="preset-list" aria-label="Simulation presets">${controls}</div><div class="scenario-fact" aria-label="Current component effects">${metrics}</div></section>
-          </div>
-          <aside class="teaching-column" aria-label="Lesson notes">
-            <section class="teaching-card panel"><div class="tagline"><span class="tagline-mark" aria-hidden="true">↗</span><div class="tagline-content"><h2>What changed?</h2><p>${esc(stage.changed)}</p></div></div></section>
-            <section class="teaching-card panel"><div class="tagline"><span class="tagline-mark" style="background:var(--navy-wash);color:var(--navy)" aria-hidden="true">=</span><div class="tagline-content"><h2>What is held constant?</h2><p>${esc(stage.held)}</p></div></div></section>
-            <section class="teaching-card panel"><h2>Business interpretation</h2><p>${esc(stage.business)}</p>${caution}</section>
-            <section class="callout"><div class="callout-label">Say it to a Sales Department Head</div><p>${answer}</p></section>
-            ${reconciliation(stage,calc)}
-            ${math}
-          </aside>
-        </section>`;
-    }
-
-    const LAB_SCENARIOS = {
-      A: {
-        title: "Positive Product Mix, lower Gross Profit",
-        prompt: "The Product Mix bar is positive, yet total Gross Profit is lower. What can you conclude?",
-        choices: ["Product Mix helped relative to the Period 1 basket, but another effect or effects outweighed it.","The Product Mix calculation must be wrong because Gross Profit fell.","The sales team necessarily made the right product recommendations."],
-        correct: 0,
-        reveal: "Positive Product Mix is one contribution to the bridge. It can be outweighed by Price, Quantity, Cost, Channel Mix, or other effects. A favorable mix contribution does not mean overall Gross Profit increased.",
-        stake: "Gross Profit declined overall, although product composition contributed positively. Higher costs and the other bridge effects more than offset that contribution."
-      },
-      B: {
-        title: "Gross Profit up, Product Mix negative",
-        prompt: "Total Gross Profit increased while Product Mix reduced it. How should you read that?",
-        choices: ["The overall result is positive; Price, Cost, Quantity, or Channel Mix may have more than offset unfavorable Product Mix.","A positive Gross Profit result proves every product sold was more profitable.","Ignore Product Mix because the ending Gross Profit is higher."],
-        correct: 0,
-        reveal: "The ending result and one component answer different questions. Product Mix can be unfavorable while Price, Quantity, Channel Mix, or Cost more than compensate. Keep each contribution visible and reconcile the total.",
-        stake: "Gross Profit increased overall, but the product basket within channels moved unfavorably. Other effects more than offset that headwind."
-      },
-      D: {
-        title: "Does favorable mix prove sales effort?",
-        prompt: "Product Mix is positive. Does that prove the sales team performed well?",
-        choices: ["No. It shows sales composition moved favorably; demand, availability, stock, promotions, customer needs, distribution, and seasonality can also shape mix.","Yes. Product Mix is a direct measure of individual sales effort.","Yes, if the calculation reconciles."],
-        correct: 0,
-        reveal: "The decomposition describes what changed in the sales basket, not why. Mix can reflect demand, availability, stock constraints, promotions, customer requirements, distribution decisions, or seasonality. Ask for operational evidence before attributing cause.",
-        stake: "Sales composition moved favorably. We should review availability, demand, promotions, and customer needs before linking that shift to sales actions."
-      }
-    };
-
-    function labScenarioData() {
-      const a=CORE.applyPreset("Mixed Reality",CORE.BASE);
-      a.forEach(x=>{ x.c2 += 24; });
-      const aCalc=CORE.calculate(a);
-      const b=CORE.applyPreset("No Change",CORE.BASE);
-      b.forEach(x=>{ x.p2 += 16; });
-      const d=b.map(x=>({...x}));
-      const direct=d.filter(x=>x.channel==="Direct");
-      const move=sum(direct.map(x=>x.q1))*.18;
-      direct.find(x=>x.product==="Pro").q2-=move;
-      direct.find(x=>x.product==="Core").q2+=move;
-      const bCalc=CORE.calculate(d);
-      const cRows=CORE.applyPreset("Legacy SKU Removed",CORE.BASE);
-      const cAll=CORE.calculate(cRows), cFocus=CORE.calculate(cRows,{focus:true});
-      const dCalc=CORE.calculate(CORE.applyPreset("Mixed Reality",CORE.BASE));
-      return { aRows:a,aCalc,bRows:d,bCalc,cRows,cAll,cFocus,dCalc };
-    }
-
-    function answerCard(key, calc, definition) {
-      const chosen=revealAnswers[key];
-      return `<div class="answer-options" role="group" aria-label="Choose an interpretation">${definition.choices.map((choice,i)=>`<button class="answer-option" type="button" data-answer="${key}" data-choice="${i}" aria-pressed="${chosen===i}">${esc(choice)}</button>`).join("")}</div>
-        <div class="reveal" data-visible="${chosen!=null}" aria-live="polite"><strong>${chosen===definition.correct?"Correct interpretation":"A more careful read"}.</strong> ${esc(definition.reveal)}<br><br><strong>Stakeholder wording:</strong> ${esc(definition.stake)}</div>`;
-    }
-
-    function renderLab() {
-      const stage={id:7,kind:"Interpretation lab",title:"Read the result responsibly",intro:"Interpret the bridge before deciding what it says about the business or the people behind the result.",type:"lab"};
-      const lab=labScenarioData();
-      const a=lab.aCalc, b=lab.bCalc;
-      const allMix=lab.cAll.gpImpacts.productMix, focusMix=lab.cFocus.gpImpacts.productMix;
-      return `${stageHeading(stage,model(),true)}
-        <p class="lab-intro"><strong>Start with contribution, then explain the total.</strong> Each scenario separates a component result from the total business result. Choose an interpretation to reveal the analyst explanation and plain-language wording.</p>
-        <section class="scenario-lab" aria-label="Interpretation scenarios">
-          <article class="scenario-card panel"><div class="scenario-index">Scenario A · Positive mix, lower result</div><h2>${esc(LAB_SCENARIOS.A.title)}</h2><p>${esc(LAB_SCENARIOS.A.prompt)}</p><div class="scenario-fact"><span class="fact-pill">Product Mix ${signed(lab.aCalc.gpImpacts.productMix)}</span><span class="fact-pill">Gross Profit change ${signed(a.gp.delta)}</span><span class="fact-pill">Cost ${signed(a.gpImpacts.cost)}</span></div>${answerCard("A",a,LAB_SCENARIOS.A)}</article>
-          <article class="scenario-card panel"><div class="scenario-index">Scenario B · Negative mix, higher result</div><h2>${esc(LAB_SCENARIOS.B.title)}</h2><p>${esc(LAB_SCENARIOS.B.prompt)}</p><div class="scenario-fact"><span class="fact-pill">Product Mix ${signed(b.gpImpacts.productMix)}</span><span class="fact-pill">Gross Profit change ${signed(b.gp.delta)}</span><span class="fact-pill">Price ${signed(b.gpImpacts.price)}</span></div>${answerCard("B",b,LAB_SCENARIOS.B)}</article>
-          <article class="scenario-card panel wide"><div class="scenario-index">Scenario C · Legacy / deprioritized SKU removed</div><h2>All-SKU and Focus-SKU answer different questions</h2><p>The Legacy SKU has zero Period 2 volume in the illustrative case. Focus-SKU removes that same SKU from both periods, then recalculates totals and shares among remaining products.</p>
-            <div class="all-focus"><div class="focus-view"><strong>All-SKU Product Mix · Gross Profit</strong><span>${signed(allMix)}</span><small>Includes the legacy SKU in both periods; Period 2 volume is zero for it.</small></div><div class="focus-arrow" aria-hidden="true">→</div><div class="focus-view"><strong>Focus-SKU Product Mix · Gross Profit</strong><span>${signed(focusMix)}</span><small>Legacy excluded from both periods; eligible Product × Channel shares recalculated.</small></div></div>
-            <div class="reveal" data-visible="true" style="display:block;margin-top:11px"><strong>Interpretation:</strong> Focus-SKU analysis answers “Are the remaining focus products shifting toward a more favorable composition?” It does not prove that eliminating the legacy SKU created value. Compare the scope and the actual economics before making that claim.</div>
-          </article>
-          <article class="scenario-card panel"><div class="scenario-index">Scenario D · Causality check</div><h2>${esc(LAB_SCENARIOS.D.title)}</h2><p>${esc(LAB_SCENARIOS.D.prompt)}</p>${answerCard("D",lab.dCalc,LAB_SCENARIOS.D)}</article>
-          <article class="scenario-card panel"><div class="scenario-index">Stakeholder practice · one sentence</div><h2>Choose the wording that fits the evidence</h2><p>What can you say without claiming more than the bridge shows?</p><div class="stakeholder-prompt"><label for="stakeSelect">Pick an explanation</label><select id="stakeSelect"><option value="">Choose a scenario statement</option><option value="mix">Sales composition moved favorably within channels; that was one contribution to the bridge.</option><option value="effort">The sales team proved it focused on the right products.</option><option value="legacy">Removing the legacy SKU created the full profitability improvement.</option></select><div id="stakeAnswer" class="stakeholder-answer" aria-live="polite"></div></div></article>
-        </section>
-        <div class="full-lab-note"><strong>Analyst interpretation:</strong> ${esc(LAB_SCENARIOS.A.reveal)} <br><strong>Plain-language explanation:</strong> ${esc(LAB_SCENARIOS.A.stake)}</div>
-        <details class="math-details panel" style="margin-top:15px"><summary>Advanced notes · data boundaries and attribution</summary><div class="math-body"><div class="math-row"><div class="math-label">Stepwise split</div><p class="math-copy">This lab standardizes on Channel first → Product within Channel. The interaction between changes in channel share and product share is assigned to Product Mix. Total Mix remains invariant to the split; the two individual mix components depend on the decomposition order.</p></div><div class="math-row"><div class="math-label">Aggregation level</div><p class="math-copy">Adding channel detail can change attribution among Price, Cost, and Mix when unit economics vary by channel. The total business result is the same; the model is more granular.</p></div><div class="math-row"><div class="math-label">Comparable bases</div><p class="math-copy">Flag new/discontinued products, channels with no comparable prior-period mix, free goods, returns, and credit notes. Do not create a ratio where a valid historical denominator is missing.</p></div></div></details>`;
-    }
-
-    function renderStage() {
-      renderNav();
-      document.getElementById("scenarioNameTop").textContent=scenario;
-      const stage=STAGES.find(x=>x.id===activeStage);
-      stageContent.innerHTML=activeStage===7?renderLab():activeStage===0?renderOrientation():renderAnalysis(stage);
-    }
-
-    function fieldInput(row,period,field,value) {
-      const label={q:"quantity",p:"selling price",c:"unit cost"}[field];
-      return `<input type="number" min="0" step="any" inputmode="decimal" aria-label="${esc(row.product)} · ${esc(row.channel)} · Period ${period} ${label}" data-key="${row.id}" data-period="${period}" data-field="${field}" value="${value}" autocomplete="off">`;
-    }
-    function renderEditor() {
-      editorTable.innerHTML=`<caption class="visually-hidden">Editable Product by Channel quantity, price, and cost values for each period</caption><thead><tr><th rowspan="2" scope="col">Product × Channel</th><th colspan="3" scope="colgroup">Period 1 · Beginning</th><th colspan="3" scope="colgroup">Period 2 · Ending</th></tr><tr><th scope="col">Q</th><th scope="col">P</th><th scope="col">C</th><th scope="col">Q</th><th scope="col">P</th><th scope="col">C</th></tr></thead><tbody>${state.map(row=>`<tr><td>${esc(row.product)} · ${esc(row.channel)}${row.legacy?" <span style='color:var(--amber);font-size:9px'>(Legacy)</span>":""}</td><td>${fieldInput(row,1,"q",row.q1)}</td><td>${fieldInput(row,1,"p",row.p1)}</td><td>${fieldInput(row,1,"c",row.c1)}</td><td>${fieldInput(row,2,"q",row.q2)}</td><td>${fieldInput(row,2,"p",row.p2)}</td><td>${fieldInput(row,2,"c",row.c2)}</td></tr>`).join("")}</tbody>`;
-    }
-
-    function resetState() { state=CORE.clone(CORE.BASE); scenario="Mixed Reality"; revealAnswers={}; renderEditor(); renderStage(); showToast("Illustrative data restored."); }
-    function setPreset(name) { state=CORE.applyPreset(name,state); scenario=name; renderEditor(); renderStage(); showToast(`${name} simulation applied.`); }
-
-    stageNav.addEventListener("click",event=>{
-      const button=event.target.closest("[data-stage]"); if(!button) return;
-      activeStage=Number(button.dataset.stage); renderStage(); window.scrollTo({top:0,behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"instant":"smooth"});
-    });
-    stageContent.addEventListener("click",event=>{
-      const presetButton=event.target.closest("[data-preset]");
-      if(presetButton) { setPreset(presetButton.dataset.preset); return; }
-      const answer=event.target.closest("[data-answer]");
-      if(answer) { revealAnswers[answer.dataset.answer]=Number(answer.dataset.choice); renderStage(); }
-    });
-    stageContent.addEventListener("change",event=>{
-      if(event.target.id==="stakeSelect") {
-        const target=document.getElementById("stakeAnswer");
-        const v=event.target.value;
-        target.textContent=!v?"":v==="mix"?"Good wording: it describes composition and contribution while leaving the cause open.":v==="effort"?"That overstates the evidence. The bridge shows a composition shift; several market and operational factors can cause it.":"That goes beyond a Focus-SKU comparison. The scope changed; the bridge alone does not prove the decision created value.";
-      }
-    });
-    editorTable.addEventListener("input",event=>{
-      const input=event.target.closest("input[data-key]"); if(!input) return;
-      const raw=input.value;
-      if(raw===""||!Number.isFinite(Number(raw))) return;
-      const row=state.find(x=>x.id===input.dataset.key); if(!row) return;
-      const period=Number(input.dataset.period), field=input.dataset.field;
-      const k=`${field}${period}`;
-      row[k]=Math.max(0,Number(raw)); scenario="Custom";
-      document.getElementById("scenarioNameTop").textContent=scenario;
-      const label=document.getElementById("scenarioName"); if(label) label.textContent=scenario;
-      const chips=stageContent.querySelectorAll("[data-preset]"); chips.forEach(x=>x.setAttribute("aria-pressed","false"));
-      if(activeStage!==0&&activeStage!==7) {
-        const stage=STAGES.find(x=>x.id===activeStage);
-        stageContent.innerHTML=renderAnalysis(stage);
-      } else if(activeStage===7) stageContent.innerHTML=renderLab();
-    });
-    document.getElementById("resetButton").addEventListener("click",resetState);
-    document.getElementById("editButton").addEventListener("click",()=>{datasetDetails.open=true;datasetDetails.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"instant":"smooth",block:"center"});const first=editorTable.querySelector("input");if(first)first.focus();});
-    datasetDetails.addEventListener("toggle",()=>{document.getElementById("editButton").setAttribute("aria-expanded",String(datasetDetails.open));});
-    document.addEventListener("keydown",event=>{
-      if((event.altKey||event.ctrlKey)&&event.key==="ArrowRight"){event.preventDefault();activeStage=Math.min(7,activeStage+1);renderStage();}
-      if((event.altKey||event.ctrlKey)&&event.key==="ArrowLeft"){event.preventDefault();activeStage=Math.max(0,activeStage-1);renderStage();}
-    });
-    window.PVM_LAB_UI={getState:()=>CORE.clone(state),getStage:()=>activeStage,setStage:id=>{activeStage=id;renderStage();},setPreset};
-    const initialQuery=new URLSearchParams(window.location.search);
-    const requestedStage=Number(initialQuery.get("stage"));
-    if(Number.isInteger(requestedStage)&&requestedStage>=0&&requestedStage<=7) activeStage=requestedStage;
-    const requestedPreset=initialQuery.get("preset");
-    if(PRESETS.includes(requestedPreset)){state=CORE.applyPreset(requestedPreset,state);scenario=requestedPreset;}
-    renderEditor(); renderStage();
-  })();
-  </script>
+  <section class="stage" data-stage="7">
+    <div class="kicker">Interpretation Lab</div>
+    <h1>Do not confuse contribution with performance.</h1>
+    <p class="question">Use the numbers to describe what changed. Do not claim more than the bridge proves.</p>
+    <div class="lab-grid">
+      <article class="lab-card">
+        <h3>Positive mix, lower GP</h3>
+        <div class="mini-impact"><span class="pos">Product Mix +</span><span class="neg">Gross Profit −</span></div>
+        <p>Can both be true?</p>
+        <button data-answer="a1">Reveal</button>
+        <div class="answer" id="a1"><strong>Yes.</strong> Product Mix can help while cost, price or quantity effects more than offset it. Say: “Mix moved favorably, but total GP still declined.”</div>
+      </article>
+      <article class="lab-card">
+        <h3>Negative mix, higher GP</h3>
+        <div class="mini-impact"><span class="neg">Product Mix −</span><span class="pos">Gross Profit +</span></div>
+        <p>Does higher GP prove the mix was good?</p>
+        <button data-answer="a2">Reveal</button>
+        <div class="answer" id="a2"><strong>No.</strong> Price, quantity or cost improvement may outweigh unfavorable mix. Keep the driver and total result separate.</div>
+      </article>
+      <article class="lab-card">
+        <h3>Legacy SKU removed</h3>
+        <div class="mini-impact"><span>All SKUs</span><span>Focus SKUs</span></div>
+        <p>Which view answers whether the remaining portfolio improved?</p>
+        <button data-answer="a3">Reveal</button>
+        <div class="answer" id="a3"><strong>Focus‑SKU view.</strong> Exclude the same legacy SKU from both periods and recalculate shares. This shows the mix of the continuing portfolio, not the causal value of removing the SKU.</div>
+      </article>
+      <article class="lab-card">
+        <h3>Positive Product Mix</h3>
+        <div class="mini-impact"><span class="pos">Composition +</span></div>
+        <p>Does that prove the sales team made its best effort?</p>
+        <button data-answer="a4">Reveal</button>
+        <div class="answer" id="a4"><strong>No.</strong> It proves the sales composition moved favorably. Demand, availability, promotions and customer needs can also drive the result.</div>
+      </article>
+    </div>
+    <div class="pager"><button data-go="6">← Full bridge</button><button class="next" data-go="0">Restart ↺</button></div>
+  </section>
+</main>
+<script src="app.js"></script>
 </body>
 </html>
