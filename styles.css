@@ -25,6 +25,10 @@ button{cursor:pointer}
 .kicker{color:var(--accent);font-weight:800;font-size:13px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px}
 h1{font-size:clamp(32px,4.2vw,56px);line-height:1.02;letter-spacing:-.045em;margin:0;max-width:960px}
 .question{font-size:clamp(17px,1.6vw,22px);color:var(--muted);margin:14px 0 24px;max-width:900px;line-height:1.45}
+.purpose-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:4px 0 18px}
+.purpose-item{background:#fff;border:1px solid #e5e1d8;border-radius:14px;padding:13px 14px;display:flex;flex-direction:column;gap:4px}
+.purpose-item strong{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:#334155}
+.purpose-item span{font-size:13px;line-height:1.4;color:var(--muted)}
 .lesson-card{background:var(--paper);border:1px solid rgba(23,32,51,.08);border-radius:24px;box-shadow:var(--shadow);overflow:hidden}
 .bridge-wrap{padding:24px 26px 18px}
 .bridge-head{display:flex;justify-content:space-between;gap:12px;align-items:end;margin-bottom:10px}
@@ -36,7 +40,6 @@ h1{font-size:clamp(32px,4.2vw,56px);line-height:1.02;letter-spacing:-.045em;marg
 .bar-label{font-size:10px;fill:#667085;font-weight:800}
 .bar-value{font-size:11px;fill:#172033;font-weight:900}
 .bar-value.total{font-size:12px}
-.axis-label{font-size:9px;fill:#98a2b3}
 .connector{stroke:#aeb6c2;stroke-width:1.2}
 .focus-note{margin:4px 0 0;padding:11px 13px;border-radius:12px;background:#f4f6fb;color:#43506a;font-size:13px;font-weight:700;line-height:1.45}
 .reconcile{display:flex;align-items:center;justify-content:center;gap:8px;font-size:13px;font-weight:800;color:var(--pos);padding-top:8px}
@@ -58,16 +61,24 @@ h1{font-size:clamp(32px,4.2vw,56px);line-height:1.02;letter-spacing:-.045em;marg
 .math-body{padding:0 26px 22px}
 .bridge-arithmetic{padding:13px 15px;background:#f5f6f8;border-radius:12px;font-size:15px;font-weight:850;line-height:1.5;color:#25314c}
 .calc-list{margin-top:12px;display:grid;gap:10px}
-.calc-step{border:1px solid #e6e2da;border-radius:12px;padding:12px 14px;background:#fff}
+.calc-step{border:1px solid #e6e2da;border-radius:12px;padding:13px 14px;background:#fff}
 .calc-top{display:flex;justify-content:space-between;gap:12px;align-items:baseline}
 .calc-name{font-weight:850;color:#25314c}
 .calc-value{font-weight:900;white-space:nowrap}
 .calc-formula{margin-top:5px;color:#44506a;font-size:13px;line-height:1.5}
-.calc-sub{margin-top:4px;color:#697386;font-size:12px;line-height:1.45}
+.compare-row{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center;margin-top:10px}
+.compare-box{background:#f6f7f9;border:1px solid #e7e9ed;border-radius:10px;padding:9px 10px}
+.compare-box small{display:block;color:#7b8494;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px}
+.compare-box strong{display:block;color:#25314c;font-size:13px;line-height:1.35}
+.compare-vs{font-size:10px;color:#98a2b3;font-weight:900;text-transform:uppercase}
+.calc-actual{margin-top:8px;font-size:13px;font-weight:850;color:#243047}
+.calc-meta{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.calc-meta div{font-size:12px;line-height:1.45;color:#667085}
+.calc-meta strong{color:#39445b}
 .pager{display:flex;justify-content:space-between;gap:12px;margin-top:20px}
 .pager button{border:0;border-radius:12px;padding:11px 15px;font-weight:800;background:#fff;color:var(--ink);box-shadow:0 4px 15px rgba(23,32,51,.06)}
 .pager .next{background:var(--ink);color:white}
-.orientation{margin-top:26px;background:var(--paper);border:1px solid rgba(23,32,51,.08);border-radius:24px;padding:26px;box-shadow:var(--shadow)}
+.orientation{margin-top:18px;background:var(--paper);border:1px solid rgba(23,32,51,.08);border-radius:24px;padding:26px;box-shadow:var(--shadow)}
 .ladder{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;align-items:stretch}
 .layer{border:1px solid #e5e1d8;border-radius:18px;padding:20px;background:#faf9f6}
 .layer .n{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--ink);color:white;font-size:12px;font-weight:900}
@@ -76,7 +87,9 @@ h1{font-size:clamp(32px,4.2vw,56px);line-height:1.02;letter-spacing:-.045em;marg
 .split-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
 .pill{background:#f0eee8;border:1px solid #e2ddd1;border-radius:999px;padding:7px 10px;font-size:12px;font-weight:800}
 .pill.accent{background:var(--soft);border-color:#c4ceff;color:#2b49b4}
-.dataset-note{margin-top:18px;padding:14px 16px;border-radius:14px;background:#f3f5f8;color:#475467;font-size:13px}
+.dataset-note,.interpret-rule,.closing-note{margin-top:14px;padding:13px 15px;border-radius:12px;background:#f3f5f8;color:#475467;font-size:13px;line-height:1.5}
+.interpret-rule{background:#f8f6ef}
+.closing-note{background:#fff;border:1px solid #e5e1d8}
 .lab-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:26px}
 .lab-card{background:var(--paper);border:1px solid #e5e1d8;border-radius:20px;padding:22px;min-height:190px;display:flex;flex-direction:column;box-shadow:var(--shadow)}
 .lab-card h3{margin:0 0 10px;font-size:20px}
@@ -92,6 +105,7 @@ h1{font-size:clamp(32px,4.2vw,56px);line-height:1.02;letter-spacing:-.045em;marg
   .brand small,.math-status{display:none}
   .topbar-inner{gap:10px}
   .progress{justify-content:flex-start}
+  .purpose-grid{grid-template-columns:repeat(2,1fr)}
   .readout{grid-template-columns:1fr}
   .readout>div+div{border-left:0;border-top:1px solid #ebe7de}
   .ladder,.lab-grid{grid-template-columns:1fr}
@@ -99,8 +113,10 @@ h1{font-size:clamp(32px,4.2vw,56px);line-height:1.02;letter-spacing:-.045em;marg
 @media(max-width:560px){
   h1{font-size:28px;line-height:1.08}.question{font-size:16px}
   .app{padding:22px 14px 80px}.topbar-inner{padding:10px 12px}
+  .purpose-grid{grid-template-columns:1fr}
   .bridge-wrap,.experiments,.readout>div,.math-drawer summary,.math-body{padding-left:18px;padding-right:18px}
   .waterfall-chart{min-width:500px;height:330px}
   .experiments{gap:7px}.chip{padding:7px 10px;font-size:12px}
+  .compare-row{grid-template-columns:1fr}.compare-vs{text-align:center}.calc-meta{grid-template-columns:1fr}
 }
 @media(prefers-reduced-motion:reduce){*{animation:none!important;scroll-behavior:auto!important}}

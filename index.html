@@ -18,8 +18,16 @@
 <main class="app">
   <section class="stage active" data-stage="0">
     <div class="kicker">Start here</div>
-    <h1>One business movement. Six levels of explanation.</h1>
-    <p class="question">We start from the full Mixed Reality bridge, then combine its drivers into simpler views. The underlying Period 1 and Period 2 numbers never change.</p>
+    <h1>Understand what changed. Isolate why. Explain what it means.</h1>
+    <p class="question">One master business movement is explained at six levels—from a simple Revenue bridge to a full Gross Profit PVM bridge.</p>
+
+    <div class="purpose-grid">
+      <div class="purpose-item"><strong>Diagnose</strong><span>Why did Revenue or Gross Profit change?</span></div>
+      <div class="purpose-item"><strong>Assess</strong><span>Which driver may be sustainable, and which needs attention?</span></div>
+      <div class="purpose-item"><strong>Key mindset</strong><span>Quantity growth is not always the same as Volume + Mix.</span></div>
+      <div class="purpose-item"><strong>Use any benchmark</strong><span>Previous period, Budget, Target, Standard, or cross-section.</span></div>
+    </div>
+
     <div class="orientation">
       <div class="ladder">
         <div class="layer">
@@ -41,14 +49,15 @@
           <div class="split-row"><span class="pill">Channel Mix</span><span class="pill">Product Mix</span></div>
         </div>
       </div>
-      <div class="dataset-note"><strong>Source of truth:</strong> Step 6 Mixed Reality. Every earlier step is only a reduced-detail view of that same master Product × Channel dataset.</div>
+      <div class="dataset-note"><strong>Source of truth:</strong> Step 6 Mixed Reality. Every earlier step is only a reduced-detail view of that same Product × Channel dataset.</div>
+      <div class="interpret-rule"><strong>Rule:</strong> calculation tells us <em>what moved</em>; interpretation tells us <em>what it may mean</em>. A different level of analytical breakdown can change the attribution, so always state the level being analyzed.</div>
     </div>
     <div class="pager"><span></span><button class="next" data-go="1">Start Revenue →</button></div>
   </section>
 
   <section class="stage" data-stage="1">
     <div class="kicker">Revenue · Step 1</div>
-    <h1>Revenue changed. Was it price, or everything else?</h1>
+    <h1>Revenue changed. Was it Price, or Volume + Mix?</h1>
     <p class="question">At this level, “Volume + Mix” intentionally combines total quantity and sales composition.</p>
     <div class="lesson-card" data-view="rev2"></div>
     <div class="pager"><button data-go="0">← Overview</button><button class="next" data-go="2">Split Volume + Mix →</button></div>
@@ -56,15 +65,15 @@
 
   <section class="stage" data-stage="2">
     <div class="kicker">Revenue · Step 2</div>
-    <h1>Now isolate pure quantity from composition.</h1>
-    <p class="question">Quantity asks: what if total units changed, but the Period‑1 mix stayed exactly the same?</p>
+    <h1>Now isolate pure Quantity from Total Mix.</h1>
+    <p class="question">Quantity asks: what if total units changed, but the Period‑1 composition stayed exactly the same?</p>
     <div class="lesson-card" data-view="rev3"></div>
     <div class="pager"><button data-go="1">← Back</button><button class="next" data-go="3">Split Total Mix →</button></div>
   </section>
 
   <section class="stage" data-stage="3">
     <div class="kicker">Revenue · Step 3</div>
-    <h1>Split mix into <em>where</em> and <em>what</em>.</h1>
+    <h1>Split Mix into <em>where</em> and <em>what</em>.</h1>
     <p class="question"><strong>Channel Mix</strong> = where volume moved. <strong>Product Mix</strong> = what products gained or lost share inside each channel.</p>
     <div class="lesson-card" data-view="rev4"></div>
     <div class="pager"><button data-go="2">← Back</button><button class="next" data-go="4">Move to Gross Profit →</button></div>
@@ -72,16 +81,16 @@
 
   <section class="stage" data-stage="4">
     <div class="kicker">Gross Profit · Step 1</div>
-    <h1>Gross Profit adds one new force: cost.</h1>
-    <p class="question">Price can help, cost can hurt, and quantity plus mix remain combined at this first level.</p>
+    <h1>Gross Profit adds one new force: Cost.</h1>
+    <p class="question">Price can help, Cost can hurt, and Quantity plus Mix remain combined at this first level.</p>
     <div class="lesson-card" data-view="gp3"></div>
     <div class="pager"><button data-go="3">← Back</button><button class="next" data-go="5">Split Volume + Mix →</button></div>
   </section>
 
   <section class="stage" data-stage="5">
     <div class="kicker">Gross Profit · Step 2</div>
-    <h1>Separate pure quantity from Gross Profit mix.</h1>
-    <p class="question">Mix is valued at Period‑1 unit margin so later price and cost changes do not contaminate it.</p>
+    <h1>Separate pure Quantity from Gross Profit Mix.</h1>
+    <p class="question">Mix is valued at Period‑1 unit margin so later Price and Cost changes do not contaminate it.</p>
     <div class="lesson-card" data-view="gp4"></div>
     <div class="pager"><button data-go="4">← Back</button><button class="next" data-go="6">Split Total Mix →</button></div>
   </section>
@@ -97,21 +106,21 @@
   <section class="stage" data-stage="7">
     <div class="kicker">Interpretation Lab</div>
     <h1>Do not confuse contribution with performance.</h1>
-    <p class="question">Use the numbers to describe what changed. Do not claim more than the bridge proves.</p>
+    <p class="question">Use the bridge to describe what changed, then add business context before judging why it happened.</p>
     <div class="lab-grid">
       <article class="lab-card">
         <h3>Positive mix, lower GP</h3>
         <div class="mini-impact"><span class="pos">Product Mix +</span><span class="neg">Gross Profit −</span></div>
         <p>Can both be true?</p>
         <button data-answer="a1">Reveal</button>
-        <div class="answer" id="a1"><strong>Yes.</strong> Product Mix can help while cost, price or quantity effects more than offset it. Say: “Mix moved favorably, but total GP still declined.”</div>
+        <div class="answer" id="a1"><strong>Yes.</strong> Product Mix can help while Cost, Price or Quantity effects more than offset it. Say: “Mix moved favorably, but total GP still declined.”</div>
       </article>
       <article class="lab-card">
         <h3>Negative mix, higher GP</h3>
         <div class="mini-impact"><span class="neg">Product Mix −</span><span class="pos">Gross Profit +</span></div>
-        <p>Does higher GP prove the mix was good?</p>
+        <p>Does higher GP prove the Mix was good?</p>
         <button data-answer="a2">Reveal</button>
-        <div class="answer" id="a2"><strong>No.</strong> Price, quantity or cost improvement may outweigh unfavorable mix. Keep the driver and total result separate.</div>
+        <div class="answer" id="a2"><strong>No.</strong> Price, Quantity or Cost improvement may outweigh unfavorable Mix. Keep the driver and total result separate.</div>
       </article>
       <article class="lab-card">
         <h3>Legacy SKU removed</h3>
@@ -125,9 +134,10 @@
         <div class="mini-impact"><span class="pos">Composition +</span></div>
         <p>Does that prove the sales team made its best effort?</p>
         <button data-answer="a4">Reveal</button>
-        <div class="answer" id="a4"><strong>No.</strong> It proves the sales composition moved favorably. Demand, availability, promotions and customer needs can also drive the result.</div>
+        <div class="answer" id="a4"><strong>No.</strong> It proves sales composition moved favorably. Demand, availability, promotions and customer needs can also drive the result.</div>
       </article>
     </div>
+    <div class="closing-note"><strong>Same method, different benchmark:</strong> the bridge can compare Actual vs Previous Period, Budget, Target, Standard, or another relevant comparison group.</div>
     <div class="pager"><button data-go="6">← Full bridge</button><button class="next" data-go="0">Restart ↺</button></div>
   </section>
 </main>
