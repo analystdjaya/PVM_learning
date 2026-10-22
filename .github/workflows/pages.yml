@@ -27,7 +27,7 @@ jobs:
         with:
           node-version: 24
       - name: Run all PVM math checks
-        run: node scripts/run-math-checks.cjs
+        run: node .github/scripts/run-math-checks.cjs
       - name: Upload the static site
         uses: actions/upload-pages-artifact@v4
         with:

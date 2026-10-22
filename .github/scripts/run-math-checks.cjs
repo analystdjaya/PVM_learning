@@ -5,7 +5,7 @@ const { resolve } = require("node:path");
 const { runInNewContext } = require("node:vm");
 
 const expectedChecks = 33;
-const appPath = resolve(__dirname, "../app.js");
+const appPath = resolve(__dirname, "../../app.js");
 const appSource = readFileSync(appPath, "utf8");
 
 // Run the production script with a minimal DOM shim; the math checks need no browser.
