@@ -377,33 +377,43 @@
   function runTests(){
     const r=RESULT;
     const checks=[
-      close(r.rev2-r.rev1,r.price+r.volumeMixR),
-      close(r.volumeMixR,r.quantityR+r.totalMixR),
-      close(r.totalMixR,r.channelMixR+r.productMixR),
-      close(r.rev2-r.rev1,r.price+r.quantityR+r.channelMixR+r.productMixR),
-      close(r.gp2-r.gp1,r.price+r.volumeMixGP+r.cost),
-      close(r.volumeMixGP,r.quantityGP+r.totalMixGP),
-      close(r.totalMixGP,r.channelMixGP+r.productMixGP),
-      close(r.gp2-r.gp1,r.price+r.quantityGP+r.channelMixGP+r.productMixGP+r.cost),
-      close(r.rev1,35760),close(r.rev2,43984),close(r.gp1,12880),close(r.gp2,15360),
-      close(r.price,3016),close(r.quantityR,3576),close(r.totalMixR,1632),
-      close(r.channelMixR,512),close(r.productMixR,1120),
-      close(r.quantityGP,1288),close(r.totalMixGP,816),close(r.channelMixGP,256),close(r.productMixGP,560),
-      close(r.revP1Q2-r.rev1,r.volumeMixR),
-      close(r.revOldMixQ2-r.rev1,r.quantityR),
-      close(r.revP1Q2-r.revOldMixQ2,r.totalMixR),
-      close(r.revAfterChannel-r.revOldMixQ2,r.channelMixR),
-      close(r.revP1Q2-r.revAfterChannel,r.productMixR),
-      close(r.gpP1C1Q2-r.gp1,r.volumeMixGP),
-      close(r.gpOldMixQ2-r.gp1,r.quantityGP),
-      close(r.gpP1C1Q2-r.gpOldMixQ2,r.totalMixGP),
-      close(r.gpAfterChannel-r.gpOldMixQ2,r.channelMixGP),
-      close(r.gpP1C1Q2-r.gpAfterChannel,r.productMixGP),
-      close(r.gpP2C1Q2-r.gpP1C1Q2,r.price),
-      close(r.gp2-r.gpP2C1Q2,r.cost)
+      {name:"Revenue bridge: delta = price + volume/mix",pass:close(r.rev2-r.rev1,r.price+r.volumeMixR)},
+      {name:"Revenue volume/mix = quantity + total mix",pass:close(r.volumeMixR,r.quantityR+r.totalMixR)},
+      {name:"Revenue total mix = channel mix + product mix",pass:close(r.totalMixR,r.channelMixR+r.productMixR)},
+      {name:"Revenue full bridge reconciles",pass:close(r.rev2-r.rev1,r.price+r.quantityR+r.channelMixR+r.productMixR)},
+      {name:"GP bridge: delta = price + volume/mix + cost",pass:close(r.gp2-r.gp1,r.price+r.volumeMixGP+r.cost)},
+      {name:"GP volume/mix = quantity + total mix",pass:close(r.volumeMixGP,r.quantityGP+r.totalMixGP)},
+      {name:"GP total mix = channel mix + product mix",pass:close(r.totalMixGP,r.channelMixGP+r.productMixGP)},
+      {name:"GP full bridge reconciles",pass:close(r.gp2-r.gp1,r.price+r.quantityGP+r.channelMixGP+r.productMixGP+r.cost)},
+      {name:"Revenue opening value",pass:close(r.rev1,35760)},
+      {name:"Revenue closing value",pass:close(r.rev2,43984)},
+      {name:"GP opening value",pass:close(r.gp1,12880)},
+      {name:"GP closing value",pass:close(r.gp2,15360)},
+      {name:"Price impact",pass:close(r.price,3016)},
+      {name:"Revenue quantity impact",pass:close(r.quantityR,3576)},
+      {name:"Revenue total mix impact",pass:close(r.totalMixR,1632)},
+      {name:"Revenue channel mix impact",pass:close(r.channelMixR,512)},
+      {name:"Revenue product mix impact",pass:close(r.productMixR,1120)},
+      {name:"GP quantity impact",pass:close(r.quantityGP,1288)},
+      {name:"GP total mix impact",pass:close(r.totalMixGP,816)},
+      {name:"GP channel mix impact",pass:close(r.channelMixGP,256)},
+      {name:"GP product mix impact",pass:close(r.productMixGP,560)},
+      {name:"Revenue volume/mix counterfactual",pass:close(r.revP1Q2-r.rev1,r.volumeMixR)},
+      {name:"Revenue quantity counterfactual",pass:close(r.revOldMixQ2-r.rev1,r.quantityR)},
+      {name:"Revenue total mix counterfactual",pass:close(r.revP1Q2-r.revOldMixQ2,r.totalMixR)},
+      {name:"Revenue channel mix counterfactual",pass:close(r.revAfterChannel-r.revOldMixQ2,r.channelMixR)},
+      {name:"Revenue product mix counterfactual",pass:close(r.revP1Q2-r.revAfterChannel,r.productMixR)},
+      {name:"GP volume/mix counterfactual",pass:close(r.gpP1C1Q2-r.gp1,r.volumeMixGP)},
+      {name:"GP quantity counterfactual",pass:close(r.gpOldMixQ2-r.gp1,r.quantityGP)},
+      {name:"GP total mix counterfactual",pass:close(r.gpP1C1Q2-r.gpOldMixQ2,r.totalMixGP)},
+      {name:"GP channel mix counterfactual",pass:close(r.gpAfterChannel-r.gpOldMixQ2,r.channelMixGP)},
+      {name:"GP product mix counterfactual",pass:close(r.gpP1C1Q2-r.gpAfterChannel,r.productMixGP)},
+      {name:"GP price counterfactual",pass:close(r.gpP2C1Q2-r.gpP1C1Q2,r.price)},
+      {name:"GP cost counterfactual",pass:close(r.gp2-r.gpP2C1Q2,r.cost)},
     ];
-    const passed=checks.filter(Boolean).length;
-    return {passed:passed,total:checks.length,ok:passed===checks.length};
+    const failures=checks.filter(function(check){return !check.pass;}).map(function(check){return check.name;});
+    const passed=checks.length-failures.length;
+    return {passed:passed,total:checks.length,ok:failures.length===0,failures:failures};
   }
 
   const test=runTests();
